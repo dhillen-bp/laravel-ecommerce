@@ -1,4 +1,5 @@
 <div class="px-6 py-8 md:px-12">
+
     <!-- Header -->
     <section class="mb-10 mt-20 text-center">
         <h1 class="text-3xl font-bold">Semua Produk</h1>
@@ -7,7 +8,7 @@
 
     <!-- Grid Produk -->
     <section>
-        <div class="grid grid-cols-2 gap-6 px-4 sm:grid-cols-2 md:grid-cols-3">
+        <div class="grid grid-cols-2 gap-6 px-4 sm:grid-cols-2 md:grid-cols-3 md:gap-10">
             @foreach ($products as $product)
                 <div class="flex flex-col rounded-lg border p-4 shadow hover:shadow-lg">
                     <img src="{{ $product->image == null ? asset('images/laravel.svg') : Storage::url($product->image) }}"
@@ -22,13 +23,12 @@
                                 class="icon-[tabler--info-square] h-5"></span> <span
                                 class="hidden text-sm lg:block">Lihat
                                 Detail</span></a>
-                        <button class="btn btn-primary"><span class="icon-[tabler--shopping-cart-plus] h-5"></span>
-                            <span class="hidden text-sm lg:block">Tambah ke Keranjang</span></button>
+
+                        @livewire('front.cart.add-to-cart', ['productId' => $product->id])
                     </div>
                     <button class="btn btn-success mt-3 self-center rounded md:text-base">
                         Beli Sekarang
                     </button>
-
                 </div>
             @endforeach
         </div>

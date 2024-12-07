@@ -18,7 +18,7 @@ return new class extends Migration
             $table->enum('status', ['pending', 'paid', 'failed'])->default('pending');
             $table->string('shipping_address');
             $table->string('shipping_method')->nullable();
-            $table->decimal('shipping_cost', 10, 2)->default(0.00);
+            $table->unsignedBigInteger('shipping_cost');
             $table->string('phone_number');
             $table->timestamps();
         });

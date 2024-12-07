@@ -9,6 +9,7 @@ export default {
         "./resources/**/*.js",
         "./resources/**/*.vue",
         "./node_modules/flyonui/dist/js/*.js",
+        './vendor/masmerise/livewire-toaster/resources/views/*.blade.php',
     ],
     theme: {
         extend: {
