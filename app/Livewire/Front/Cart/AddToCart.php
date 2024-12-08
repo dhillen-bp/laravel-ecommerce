@@ -12,10 +12,14 @@ use Masmerise\Toaster\Toaster;
 class AddToCart extends Component
 {
     public $productId;
+    public $quantity = 1;
+    public $stock;
 
     public function mount($productId)
     {
         $this->productId = $productId;
+        $product = Product::findOrFail($this->productId);
+        $this->stock = $product->stock;
     }
 
     public function addToCart()
@@ -25,32 +29,44 @@ class AddToCart extends Component
             return $this->redirect(route('front.login'));
         }
 
+        if ($this->quantity > $this->stock) {
+            Toaster::error('Jumlah produk melebihi stok tersedia!');
+            return;
+        }
 
-        $product = Product::findOrFail($this->productId);
-
-        // Cek apakah pengguna memiliki keranjang
         $cart = Cart::firstOrCreate(['user_id' => Auth::id()]);
 
-        // Tambahkan produk ke keranjang
         $cartItem = CartItem::where('cart_id', $cart->id)
             ->where('product_id', $this->productId)
             ->first();
 
         if ($cartItem) {
-            // Jika produk sudah ada di keranjang, tambah jumlahnya
-            $cartItem->quantity += 1;
+            $cartItem->quantity += $this->quantity;
             $cartItem->save();
         } else {
-            // Jika belum, tambahkan sebagai item baru
             CartItem::create([
                 'cart_id' => $cart->id,
                 'product_id' => $this->productId,
-                'quantity' => 1,
+                'quantity' => $this->quantity,
             ]);
         }
 
         $this->dispatch('cartUpdated');
         Toaster::success('Produk berhasil ditambahkan ke keranjang!');
+    }
+
+    public function increaseQuantity()
+    {
+        if ($this->quantity < $this->stock) {
+            $this->quantity++;
+        }
+    }
+
+    public function decreaseQuantity()
+    {
+        if ($this->quantity > 1) {
+            $this->quantity--;
+        }
     }
 
     public function render()

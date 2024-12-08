@@ -2,9 +2,9 @@
 
 namespace App\Livewire\Front;
 
-use App\Models\CartItem;
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Models\Product;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Title;
@@ -13,11 +13,11 @@ use Livewire\Component;
 use Masmerise\Toaster\Toaster;
 
 #[Title('Checkout')]
-class Checkout extends Component
+class CheckoutNow extends Component
 {
     #[Validate]
 
-    public $cartItems;
+    public $product;
     public $totalPrice = 0;
     public $totalProductPrice = 0;
     public $user;
@@ -52,13 +52,10 @@ class Checkout extends Component
             return $this->redirect(route('front.cart'));
         }
 
-        $this->cartItems = CartItem::whereIn('id', $selectedItems)
-            ->with('product')
-            ->get();
+        $this->product = Product::whereIn('id', $selectedItems)
+            ->first();
 
-        $this->totalProductPrice = $this->cartItems->sum(function ($item) {
-            return $item->product->price * $item->quantity;
-        });
+        $this->totalProductPrice = $this->product->price;
 
         $this->totalPrice = $this->totalProductPrice;
 
@@ -83,31 +80,23 @@ class Checkout extends Component
         DB::beginTransaction();
         try {
             $validated = $this->validate();
+            // dd($validated);
 
             $order = Order::create([
                 'user_id' => Auth::id(),
                 'phone_number' => $this->phone_number,
-                'price' => $this->totalPrice -  $this->shipping_cost,
+                'price' => $this->totalProductPrice,
                 'shipping_address' => $this->shipping_address,
                 'shipping_method' => $this->shipping_method,
                 'shipping_cost' => $this->shipping_cost,
             ]);
 
-            foreach ($this->cartItems as $item) {
-                OrderItem::create([
-                    'order_id' => $order->id,
-                    'product_id' => $item->product->id,
-                    'quantity' => $item->quantity,
-                    'price' => $item->product->price,
-                ]);
-            }
-
-            $cart = $this->user->cart;
-            if ($cart) {
-                $cartItemIds = $this->cartItems->pluck('id')->toArray();
-
-                $cart->cart_items()->whereIn('id', $cartItemIds)->delete();
-            }
+            OrderItem::create([
+                'order_id' => $order->id,
+                'product_id' => $this->product->id,
+                'quantity' => 1,
+                'price' => $this->product->price,
+            ]);
 
             session()->forget('checkoutItems');
 
@@ -123,8 +112,9 @@ class Checkout extends Component
             return;
         }
     }
+
     public function render()
     {
-        return view('livewire.front.checkout');
+        return view('livewire.front.checkout-now');
     }
 }

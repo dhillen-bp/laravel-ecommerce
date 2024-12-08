@@ -1,59 +1,58 @@
 <div class="container mx-auto min-h-screen p-4">
-    <!-- Heading -->
     <h1 class="mb-6 mt-20 text-center text-3xl font-bold">Keranjang Belanja</h1>
 
-    <!-- Cart Items -->
     <div class="flex flex-col gap-4">
-        <!-- Item 1 -->
-        <div class="flex items-center justify-between rounded-lg border p-4 shadow">
-            <div class="flex items-center gap-4">
-                <!-- Product Image -->
-                <img src="https://cdn.flyonui.com/fy-assets/components/carousel/image-22.png" alt="Produk"
-                    class="h-24 w-24 rounded-md object-cover">
-                <!-- Product Details -->
-                <div>
-                    <h2 class="text-lg font-semibold">Nama Produk</h2>
-                    <p class="text-sm text-gray-500">Deskripsi singkat produk</p>
-                </div>
-            </div>
-            <!-- Quantity and Price -->
-            <div class="flex items-center gap-4">
-                <!-- Quantity Buttons -->
-                <div class="flex items-center">
-                    <button class="px-2 py-1 text-gray-600 hover:bg-gray-200">-</button>
-                    <input type="number" min="1" value="1"
-                        class="w-12 border text-center focus:outline-none">
-                    <button class="px-2 py-1 text-gray-600 hover:bg-gray-200">+</button>
-                </div>
-                <!-- Price -->
-                <span class="text-lg font-semibold">Rp 123.000</span>
-                <!-- Remove Button -->
-                <button
-                    class="flex items-center justify-center rounded-full border border-red-500 text-red-500 hover:text-red-700">
-                    <span class="icon-[tabler--x] h-6 w-6"></span>
-                </button>
-            </div>
-        </div>
+        @foreach ($cartItems as $item)
+            <label for="item-{{ $item->id }}">
+                <div class="flex items-center justify-between rounded-lg border p-4 shadow">
+                    <div class="flex space-x-6">
+                        <input type="checkbox" wire:model="selectedItems" value="{{ $item->id }}"
+                            id="item-{{ $item->id }}">
+                        <div class="flex items-start gap-4">
+                            <img src="{{ $item->product->image ? Storage::url($item->product->image) : asset('images/laravel.svg') }}"
+                                alt="Produk" class="h-24 w-24 rounded-md object-cover">
+                            <div class="space-y-3">
+                                <h2 class="text-lg font-semibold">{{ $item->product->name }}</h2>
+                                <div class="flex items-center gap-2">
+                                    <span class="text-sm">Quantity:</span>
+                                    <div class="qty-container flex items-center rounded-md border border-gray-300">
+                                        <input type="number" min="1" value="{{ $item->quantity }}"
+                                            class="quantity-input w-12 border-b border-t border-gray-300 py-1 text-center text-sm focus:outline-none"
+                                            data-id="{{ $item->id }}"
+                                            wire:change="updateQuantity({{ $item->id }}, $event.target.value)" />
+                                    </div>
+                                </div>
+                                <span class="text-sm">Harga satuan produk: <span>Rp
+                                        {{ $item->product->price }}</span></span>
+                            </div>
+                        </div>
+                    </div>
 
-        <!-- Add More Items -->
-        <div class="text-center">
-            <a href="/products" class="text-blue-500 hover:underline">Lanjutkan Belanja</a>
+                    <div class="flex flex-col gap-y-8">
+                        <button wire:click="removeFromCart({{ $item->id }})"
+                            class="btn btn-error btn-sm self-end rounded-full">Hapus</button>
+                        <span class="self-end text-lg font-semibold">Rp
+                            {{ number_format($item->product->price * $item->quantity, 0, ',', '.') }}</span>
+                    </div>
+                </div>
+            </label>
+        @endforeach
+        <div class="mt-2 text-center">
+            <a href="{{ route('front.products') }}" wire:navigate class="btn btn-primary btn-text">Lanjutkan
+                Belanja</a>
         </div>
     </div>
 
-    <!-- Cart Summary -->
     <div class="mt-6 flex justify-between rounded-lg border p-4 shadow">
         <div>
             <h2 class="text-lg font-semibold">Total</h2>
         </div>
-        <div class="text-lg font-bold">Rp 123.000</div>
+        <div class="text-lg font-bold">Rp {{ number_format($cartTotalPrice, 0, ',', '.') }}</div>
     </div>
 
-    <!-- Checkout Button -->
     <div class="mt-6 text-center">
-        <a href="{{ route('front.checkout') }}"
-            class="w-full rounded-lg bg-green-500 px-6 py-2 text-white hover:bg-green-600">
-            Lanjut ke Pembayaran
-        </a>
+        <button wire:click="checkoutSelected" class="btn btn-success w-full rounded-full">
+            Checkout Sekarang
+        </button>
     </div>
 </div>

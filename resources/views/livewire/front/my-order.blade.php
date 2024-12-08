@@ -5,10 +5,12 @@
 
         @foreach ($orders as $order)
             <div class="rounded-lg border bg-white p-4 shadow-md">
-                <h2 class="text-xl font-semibold">Order Transaction: {{ $order->payment->transaction_id }}</h2>
+                <h2 class="text-xl font-semibold">Order Transaction:
+                    {{ $order->payment ? $order->payment->transaction_id : 'Belum melakukan pembayaran' }}</h2>
                 <p class="text-sm text-gray-600">Date: {{ $order->created_at }}</p>
                 <p class="text-sm text-gray-600">Order Status: {{ $order->status }}</p>
-                <p class="text-sm text-gray-600">Payment Status: {{ $order->payment->status }}</p>
+                <p class="text-sm text-gray-600">Payment Status:
+                    {{ $order->payment ? $order->payment->status : 'unpaid' }}</p>
 
                 @foreach ($order->orderItems as $orderItem)
                     <div class="mt-4 space-y-4">

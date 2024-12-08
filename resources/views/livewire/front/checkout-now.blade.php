@@ -1,10 +1,8 @@
 <div class="container mx-auto min-h-screen p-4">
-    <!-- Heading -->
     <h1 class="mb-6 mt-20 text-center text-3xl font-bold">Checkout</h1>
 
-    <!-- Checkout Form -->
     <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
-        <!-- Billing Details -->
+
         <div class="rounded-lg border p-4 shadow">
             <h2 class="mb-4 text-lg font-semibold">Detail Penagihan</h2>
             <form action="/checkout/confirm" method="POST" class="space-y-4">
@@ -50,28 +48,28 @@
         <div class="rounded-lg border p-4 shadow">
             <h2 class="mb-4 text-lg font-semibold">Ringkasan Pesanan</h2>
             <div class="space-y-4">
-                @foreach ($cartItems as $item)
-                    <div class="flex items-start justify-between">
-                        <div class="flex gap-3">
-                            <div>
 
-                                <img src="{{ $item->product->image ? Storage::url($item->product->image) : asset('images/laravel.svg') }}"
-                                    class="w-16" alt="Product Image">
-                            </div>
-                            <div>
-                                <p class="font-medium">{{ $item->product->name }}</p>
-                                <p class="text-sm text-gray-500">Qty: {{ $item->quantity }}</p>
-                                <p class="text-sm text-gray-500">Harga Satuan: Rp
-                                    {{ number_format($item->product->price, 0, ',', '.') }}</p>
-                            </div>
+                <div class="flex items-start justify-between">
+                    <div class="flex gap-3">
+                        <div>
+
+                            <img src="{{ $product->image ? Storage::url($product->image) : asset('images/laravel.svg') }}"
+                                class="w-16" alt="Product Image">
                         </div>
                         <div>
-                            <p class="font-semibold">Subtotal</p>
-                            <p class="font-medium">Rp
-                                {{ number_format($item->product->price * $item->quantity, 0, ',', '.') }}</p>
+                            <p class="font-medium">{{ $product->name }}</p>
+                            <p class="text-sm text-gray-500">Qty: 1</p>
+                            <p class="text-sm text-gray-500">Harga Satuan: Rp
+                                {{ number_format($product->price, 0, ',', '.') }}</p>
                         </div>
                     </div>
-                @endforeach
+                    <div>
+                        <p class="font-semibold">Subtotal</p>
+                        <p class="font-medium">Rp
+                            {{ number_format($product->price * 1, 0, ',', '.') }}</p>
+                    </div>
+                </div>
+
                 <div class="h-px bg-gray-300"></div>
 
                 <div>
@@ -92,7 +90,6 @@
         </div>
     </div>
 
-    <!-- Payment Button -->
     <div class="mt-6 text-center">
         <button wire:click="submitOrder" class="w-full rounded-lg bg-green-500 px-6 py-2 text-white hover:bg-green-600">
             Bayar Sekarang

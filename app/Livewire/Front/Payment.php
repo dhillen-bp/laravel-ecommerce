@@ -34,19 +34,25 @@ class Payment extends Component
             'payment_proof' => 'required|image|max:2048',
         ]);
 
-        $fileName = uniqid('payment_') . '.' . $this->payment_proof->getClientOriginalExtension();
-        $filePath = $this->payment_proof->storeAs('payment_proofs', $fileName, 'public');
+        try {
+            $fileName = uniqid('payment_') . '.' . $this->payment_proof->getClientOriginalExtension();
+            $filePath = $this->payment_proof->storeAs('payment_proofs', $fileName, 'public');
 
-        ModelsPayment::create([
-            'transaction_id' => uniqid('TR-'),
-            'order_id' => $this->order->id,
-            'status' => 'pending',
-            'payment_proof' => $filePath,
-        ]);
+            ModelsPayment::create([
+                'transaction_id' => uniqid('TR-'),
+                'order_id' => $this->order->id,
+                'status' => 'pending',
+                'payment_proof' => $filePath,
+            ]);
 
-        Toaster::success('Bukti pembayaran berhasil diunggah. Menunggu verifikasi.');
-        return $this->redirect(route('front.order'));
+            Toaster::success('Bukti pembayaran berhasil diunggah. Keranjang berhasil dibersihkan.');
+            return $this->redirect(route('front.order'));
+        } catch (\Exception $e) {
+            Toaster::error('Terjadi kesalahan saat memproses pembayaran. Silakan coba lagi.');
+            return;
+        }
     }
+
 
     public function render()
     {

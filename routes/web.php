@@ -12,6 +12,7 @@ Route::get('/carts', App\Livewire\Front\Cart::class)->name('front.cart');
 Route::get('/my-order', App\Livewire\Front\MyOrder::class)->name('front.order');
 Route::get('/my-order/{order_id}', App\Livewire\Front\OrderDetail::class)->name('front.order_detail');
 Route::get('/checkout', App\Livewire\Front\Checkout::class)->name('front.checkout');
+Route::get('/checkout-now', App\Livewire\Front\CheckoutNow::class)->name('front.checkout_now');
 Route::get('/payment/{order_id}', App\Livewire\Front\Payment::class)->name('front.payment');
 
 Route::get('/login', App\Livewire\Auth\Login::class)->name('front.login');

@@ -18,8 +18,14 @@ class ProductDetail extends Component
 
     public function render()
     {
+        $randomProducts = Product::where('id', '!=', $this->product->id)
+            ->inRandomOrder()
+            ->take(4)
+            ->get();
+
         return view('livewire.front.product-detail', [
             'product' => $this->product,
+            'randomProducts' => $randomProducts
         ]);
     }
 }

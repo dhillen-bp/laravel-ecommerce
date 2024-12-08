@@ -18,17 +18,15 @@
                         <h2 class="font-semibold">Rp {{ number_format($product->price, 0, ',', '.') }}</h2>
                     </span>
                     <p class="truncate text-sm text-gray-500">{{ $product->description }}</p>
-                    <div class="mt-2 flex justify-around gap-6">
+                    <div class="mb-4 mt-2 flex items-center justify-between gap-6">
                         <a href="{{ route('front.products.show', $product) }}" class="btn btn-info" wire:navigate><span
                                 class="icon-[tabler--info-square] h-5"></span> <span
                                 class="hidden text-sm lg:block">Lihat
                                 Detail</span></a>
 
-                        @livewire('front.cart.add-to-cart', ['productId' => $product->id])
+                        @livewire('components.button-buy-now', ['productId' => $product->id])
                     </div>
-                    <button class="btn btn-success mt-3 self-center rounded md:text-base">
-                        Beli Sekarang
-                    </button>
+                    @livewire('front.cart.add-to-cart', ['productId' => $product->id])
                 </div>
             @endforeach
         </div>

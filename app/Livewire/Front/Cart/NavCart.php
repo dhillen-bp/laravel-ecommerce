@@ -11,7 +11,7 @@ use Masmerise\Toaster\Toaster;
 class NavCart extends Component
 {
     public $cartItems = [];
-    public $cartTotal = 0; // Menambahkan total harga
+    public $cartTotal = 0;
     public $selectedItems = [];
 
     protected $listeners = ['cartUpdated' => 'loadCartItems'];
@@ -53,8 +53,6 @@ class NavCart extends Component
 
         return $this->redirect(route('front.checkout'));
     }
-
-
 
     public function render()
     {
