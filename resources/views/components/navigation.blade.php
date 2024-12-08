@@ -107,11 +107,9 @@
                 @endif
             @endauth
 
-            @guest
-                <a href="{{ route('front.login') }}" class="btn btn-success btn-outline" wire:navigate>
-                    Login
-                </a>
-            @endguest
+            <a href="{{ route('front.login') }}" class="btn btn-success btn-outline" wire:navigate>
+                Login
+            </a>
         </div>
     </div>
 </nav>
