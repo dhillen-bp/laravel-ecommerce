@@ -10,7 +10,7 @@
                 <p class="text-sm text-gray-600">Date: {{ $order->created_at }}</p>
                 <p class="text-sm text-gray-600">Order Status: {{ $order->status }}</p>
                 <p class="text-sm text-gray-600">Payment Status:
-                    {{ $order->payment ? $order->payment->status : 'unpaid' }}</p>
+                    {{ $order->payment->status ?? '-' }}</p>
 
                 @foreach ($order->orderItems as $orderItem)
                     <div class="mt-4 space-y-4">

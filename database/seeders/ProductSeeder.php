@@ -21,7 +21,8 @@ class ProductSeeder extends Seeder
             Product::create([
                 'name' => ucfirst($faker->unique()->word),
                 'description' => $faker->sentence,
-                'price' => $faker->numberBetween(1000, 1000000),
+                // 'price' => $faker->numberBetween(1000, 1000000),
+                'price' => $faker->randomElement([1000, 5000, 10000, 20000, 30000, 50000, 70000, 100000]),
                 'stock' => $faker->numberBetween(1, 100),
                 'is_active' => $faker->randomElement([1, 0]),
             ]);

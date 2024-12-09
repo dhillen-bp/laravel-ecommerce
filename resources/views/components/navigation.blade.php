@@ -16,7 +16,7 @@
                 </div>
 
                 <!-- Hamburger Icon for Mobile -->
-                <button type="button" class="btn btn-square btn-secondary btn-outline collapse-toggle btn-sm"
+                <button type="button" class="collapse-toggle btn btn-square btn-secondary btn-outline btn-sm"
                     data-collapse="#dropdown-navbar-collapse" aria-controls="dropdown-navbar-collapse"
                     aria-label="Toggle navigation">
                     <span class="size-4 icon-[tabler--menu-2] collapse-open:hidden"></span>
@@ -107,9 +107,11 @@
                 @endif
             @endauth
 
-            <a href="{{ route('front.login') }}" class="btn btn-success btn-outline" wire:navigate>
-                Login
-            </a>
+            @guest
+                <a href="{{ route('front.login') }}" class="btn btn-success btn-outline" wire:navigate>
+                    Login
+                </a>
+            @endguest
         </div>
     </div>
 </nav>

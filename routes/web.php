@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PaymentController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Masmerise\Toaster\Toaster;
@@ -14,6 +15,9 @@ Route::get('/my-order/{order_id}', App\Livewire\Front\OrderDetail::class)->name(
 Route::get('/checkout', App\Livewire\Front\Checkout::class)->name('front.checkout');
 Route::get('/checkout-now', App\Livewire\Front\CheckoutNow::class)->name('front.checkout_now');
 Route::get('/payment/{order_id}', App\Livewire\Front\Payment::class)->name('front.payment');
+
+Route::post('/payment/create', [PaymentController::class, 'createPayment']);
+Route::post('/payment/callback', [PaymentController::class, 'paymentCallback']);
 
 Route::get('/login', App\Livewire\Auth\Login::class)->name('front.login');
 Route::get('/register', App\Livewire\Auth\Register::class)->name('front.register');

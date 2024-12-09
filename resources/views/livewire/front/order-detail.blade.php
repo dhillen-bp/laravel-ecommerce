@@ -50,13 +50,6 @@
             </div>
             <span>Status: <span class="font-semibold">{{ $order->payment->status }}</span></span>
             <span>Tanggal Transaksi: <span class="font-semibold">{{ $order->payment->created_at }}</span></span>
-        @else
-            <div class="flex flex-col gap-y-2">
-                <p>Anda belum melakukan transaksi penbayaran. Harap kirimkan bukti pembayaran!</p>
-                <a href="{{ route('front.payment', $order->id) }}" wire:navigate
-                    class="btn btn-primary btn-text">Lanjutkan
-                    Pembayaran</a>
-            </div>
         @endif
     </div>
 </div>

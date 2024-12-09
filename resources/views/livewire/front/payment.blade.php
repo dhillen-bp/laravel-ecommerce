@@ -12,22 +12,11 @@
                 {{ number_format($order->price + $order->shipping_cost, 0, ',', '.') }}</p>
         </div>
 
-        <form wire:submit.prevent='processPayment'>
-            <div class="mt-6">
-                <label for="payment_proof" class="mb-2 block font-semibold">Upload Bukti Pembayaran:</label>
-                <input wire:model="payment_proof" type="file" id="payment_proof"
-                    class="block w-full rounded-lg border p-2">
-                @error('payment_proof')
-                    <span class="text-red-500">{{ $message }}</span>
-                @enderror
-            </div>
 
-            <div class="mt-6 text-center">
-                <button type="submit" class="w-full rounded-lg bg-green-500 px-6 py-2 text-white hover:bg-green-600">
-                    Bayar Sekarang
-                </button>
-            </div>
-        </form>
+        <div class="mt-6 text-center">
+            @livewire('front.midtrans-payment', ['orderId' => $order->id])
+        </div>
+
     </div>
 
 </div>

@@ -14,12 +14,6 @@ use Masmerise\Toaster\Toaster;
 #[Title('Products')]
 class Product extends Component
 {
-    public $currentProductId;
-
-    public function mount($currentProductId)
-    {
-        $this->currentProductId = $currentProductId;
-    }
 
     public function render()
     {

@@ -22,12 +22,22 @@ class RoleSeeder extends Seeder
             'name' => 'customer'
         ]);
 
-        $user = User::create([
-            'name' => "Admin",
-            'email' => 'admin@olsop.com',
-            'password' => bcrypt('123')
-        ]);
+        $owner = User::create(
+            [
+                'name' => "Admin",
+                'email' => 'admin@olsop.com',
+                'password' => bcrypt('123')
+            ],
+        );
+        $owner->assignRole($ownerRole);
 
-        $user->assignRole($ownerRole);
+        $customer = User::create(
+            [
+                'name' => "Pembeli",
+                'email' => 'pembeli@email.com',
+                'password' => bcrypt('123')
+            ],
+        );
+        $customer->assignRole($customerRole);
     }
 }
