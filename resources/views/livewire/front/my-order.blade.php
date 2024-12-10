@@ -7,10 +7,16 @@
             <div class="rounded-lg border bg-white p-4 shadow-md">
                 <h2 class="text-xl font-semibold">Order Transaction:
                     {{ $order->payment ? $order->payment->transaction_id : 'Belum melakukan pembayaran' }}</h2>
-                <p class="text-sm text-gray-600">Date: {{ $order->created_at }}</p>
-                <p class="text-sm text-gray-600">Order Status: {{ $order->status }}</p>
-                <p class="text-sm text-gray-600">Payment Status:
-                    {{ $order->payment->status ?? '-' }}</p>
+                <p class="text-sm text-gray-600">Tanggal: {{ $order->created_at }}</p>
+                <p class="text-sm text-gray-600">Jenis Pengiriman: {{ $order->shipping_method }}</p>
+                <p class="text-sm text-gray-600">Biaya Pengiriman: {{ $order->shipping_cost }}</p>
+                <div class="mt-2 space-y-2">
+                    <p class="text-sm text-gray-600">Order Status: <livewire:components.order-status-badge
+                            :status="$order->status" /></p>
+                    <p class="text-sm text-gray-600">Payment Status:
+                        <livewire:components.payment-status-badge :status="$order->payment->status" />
+                    </p>
+                </div>
 
                 @foreach ($order->orderItems as $orderItem)
                     <div class="mt-4 space-y-4">

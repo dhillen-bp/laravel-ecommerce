@@ -18,10 +18,10 @@
                         <h2 class="font-semibold">Rp {{ number_format($product->price, 0, ',', '.') }}</h2>
                     </span>
                     <p class="truncate text-sm text-gray-500">{{ $product->description }}</p>
-                    <p>Stok: {{$product->stock}}</p>
+                    <p>Stok: {{ $product->stock }}</p>
                     <div class="mb-4 mt-2 flex items-center justify-between gap-6">
                         <a href="{{ route('front.products.show', $product) }}" class="btn btn-info" wire:navigate><span
-                                class="icon-[tabler--info-square] h-5"></span> <span
+                                class="size-7 md:size-5 icon-[tabler--info-square]"></span> <span
                                 class="hidden text-sm lg:block">Lihat
                                 Detail</span></a>
 

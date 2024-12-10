@@ -94,7 +94,7 @@
 
     <!-- Payment Button -->
     <div class="mt-6 text-center">
-        <button wire:click="submitOrder" class="w-full rounded-lg bg-green-500 px-6 py-2 text-white hover:bg-green-600">
+        <button wire:click="submitOrder" class="btn btn-primary w-full">
             Bayar Sekarang
         </button>
     </div>

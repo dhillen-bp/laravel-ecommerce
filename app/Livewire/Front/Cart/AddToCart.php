@@ -18,7 +18,9 @@ class AddToCart extends Component
     public function mount($productId)
     {
         $this->productId = $productId;
-        $product = Product::findOrFail($this->productId);
+        $product = cache()->remember("product_{$productId}", now()->addMinutes(30), function () use ($productId) {
+            return Product::select('stock')->findOrFail($productId);
+        });
         $this->stock = $product->stock;
     }
 

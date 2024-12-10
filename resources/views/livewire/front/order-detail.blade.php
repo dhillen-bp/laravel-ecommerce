@@ -30,9 +30,11 @@
             <h3 class="text-xl font-semibold">Order Summary</h3>
             <div class="mt-4 flex items-center justify-between">
                 <div>
-                    <p class="text-sm text-gray-600">Status: {{ $order->status }}</p>
+                    <p class="text-sm text-gray-600">Status: <livewire:components.order-status-badge
+                            :status="$order->status" /></p>
                     <p class="text-sm text-gray-600">Payment Status:
-                        {{ $order->payment ? $order->payment->status : 'unpaid' }}</p>
+                        <livewire:components.payment-status-badge :status="$order->payment->status" />
+                    </p>
                 </div>
                 <p class="text-base font-semibold text-gray-600">Total: Rp
                     {{ number_format($order->price + $order->shipping_cost, 0, ',', '.') }}</p>
@@ -41,15 +43,21 @@
     </div>
 
     <div class="mt-6 flex flex-col rounded-lg border bg-white p-4 shadow-md">
-        <h1 class="mb-6 text-3xl font-semibold">Bukti Pembayaran</h1>
+        <h1 class="mb-6 text-3xl font-semibold">Detail Pembayaran</h1>
         @if ($order->payment)
             <span>Transaction ID : <span class="font-semibold">{{ $order->payment->transaction_id }}</span></span>
-            <div>
-                <span>Bukti Pembayaran:</span>
-                <img src="{{ Storage::url($order->payment->payment_proof) }}" alt="" class="max-w-96">
-            </div>
-            <span>Status: <span class="font-semibold">{{ $order->payment->status }}</span></span>
+            <span>Payment Status: <span class="font-semibold">{{ $order->payment->status }}</span></span>
+            <span>Midtrans Status: <span class="font-semibold">{{ $order->payment->midtrans_status }}</span></span>
+            <span>Payment Type: <span class="font-semibold">{{ $order->payment->payment_type }}</span></span>
             <span>Tanggal Transaksi: <span class="font-semibold">{{ $order->payment->created_at }}</span></span>
+        @else
+            <div>
+                <span>Lanjutkan Pembayaran:</span>
+                <a href="{{ route('front.payment', $order->id) }}" class="btn btn-primary w-full">Tekan disini untuk
+                    melanjutkan
+                    pembayaran</a>
+            </div>
         @endif
+
     </div>
 </div>

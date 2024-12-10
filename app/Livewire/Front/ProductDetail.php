@@ -18,7 +18,7 @@ class ProductDetail extends Component
 
     public function render()
     {
-        $randomProducts = Product::where('id', '!=', $this->product->id)
+        $randomProducts = Product::where('slug', '!=', $this->product->slug)
             ->inRandomOrder()
             ->take(4)
             ->get();

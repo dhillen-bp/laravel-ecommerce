@@ -10,6 +10,7 @@ use App\Models\Order;
 use App\Models\Payment;
 use App\Models\Product;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Masmerise\Toaster\Toaster;
 
 class PaymentController extends Controller
@@ -43,14 +44,24 @@ class PaymentController extends Controller
                     'address' => $order->shipping_address,
                     "country_code" => "IDN"
                 ],
-                'item_details' => $order->orderItems->map(function ($item) {
-                    return [
-                        'id' => $item->product_id,
-                        'price' => $item->price,
-                        'quantity' => $item->quantity,
-                        'name' => $item->product->name,
-                    ];
-                })->toArray(),
+                'item_details' => array_merge(
+                    $order->orderItems->map(function ($item) {
+                        return [
+                            'id' => $item->product_id,
+                            'price' => $item->price,
+                            'quantity' => $item->quantity,
+                            'name' => $item->product->name,
+                        ];
+                    })->toArray(),
+                    [
+                        [
+                            'id' => 'shipping_cost',
+                            'price' => $order->shipping_cost,
+                            'quantity' => 1,
+                            'name' => 'Shipping Cost',
+                        ],
+                    ]
+                ),
             ];
 
             // Buat token pembayaran
@@ -83,7 +94,7 @@ class PaymentController extends Controller
             $orderId = $notif->order_id;
             $grossAmount = $notif->gross_amount;
             $transactionTime = $notif->transaction_time;
-            $statusCode = $notif->status_code;
+            $bank = $notif->bank;
             $transactionId = $notif->transaction_id;
 
             DB::beginTransaction();
@@ -93,6 +104,9 @@ class PaymentController extends Controller
                 $order = Order::where('id', $orderId)->first();
 
                 if ($order) {
+                    $order->status = 'paid';
+                    $order->save();
+
                     foreach ($order->orderItems as $item) {
                         $product = Product::find($item->product_id);
                         if ($product) {
@@ -107,11 +121,13 @@ class PaymentController extends Controller
                         'status' => 'success',
                         'payment_type' => $type,
                         'transaction_time' => $transactionTime,
-                        'status_code' => $statusCode,
+                        'bank' => $bank,
                         'gross_amount' => $grossAmount,
                         'midtrans_status' => $transaction,
                         'json_response' => json_encode($notif), // Menyimpan respon lengkap untuk debug
                     ]);
+
+                    Toaster::success('Pembayaran berhasil dilakukan!');
                 }
             } else if ($transaction == 'pending') {
                 Payment::create([
@@ -120,7 +136,7 @@ class PaymentController extends Controller
                     'status' => 'pending',
                     'payment_type' => $type,
                     'transaction_time' => $transactionTime,
-                    'status_code' => $statusCode,
+                    'bank' => $bank,
                     'gross_amount' => $grossAmount,
                     'midtrans_status' => $transaction,
                 ]);
@@ -131,13 +147,14 @@ class PaymentController extends Controller
                     'status' => 'failed',
                     'payment_type' => $type,
                     'transaction_time' => $transactionTime,
-                    'status_code' => $statusCode,
+                    'bank' => $bank,
                     'gross_amount' => $grossAmount,
                     'midtrans_status' => $transaction,
                 ]);
             }
             DB::commit();
             // Respon ke Midtrans
+
             return response()->json(['message' => 'Notification successfully processed'], 200);
         } catch (\Exception $e) {
             DB::rollBack();

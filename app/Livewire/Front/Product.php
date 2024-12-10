@@ -17,7 +17,10 @@ class Product extends Component
 
     public function render()
     {
-        $products = ModelsProduct::where('is_active', 1)->where('stock', '>', 0)->paginate(9);
+        $products = cache()->remember('active_products', now()->addMinutes(30), function () {
+            return ModelsProduct::where('is_active', 1)->where('stock', '>', 0)->get();
+        });
+
         return view('livewire.front.product', compact('products'));
     }
 }

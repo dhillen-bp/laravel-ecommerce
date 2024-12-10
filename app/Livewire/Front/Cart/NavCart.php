@@ -5,6 +5,7 @@ namespace App\Livewire\Front\Cart;
 use App\Models\Cart;
 use App\Models\CartItem;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Livewire\Component;
 use Masmerise\Toaster\Toaster;
 
@@ -23,15 +24,20 @@ class NavCart extends Component
 
     public function loadCartItems()
     {
-        $cart = Cart::where('user_id', Auth::id())->first();
+        $userId = Auth::id();
 
-        if ($cart) {
-            $this->cartItems = CartItem::where('cart_id', $cart->id)
-                ->with('product') // Jika ingin memuat produk
-                ->get();
+        $cart = Cache::remember("cart_{$userId}", now()->addMinutes(10), function () use ($userId) {
+            return Cart::where('user_id', $userId)->with('cart_items.product')->first();
+        });
+
+        if ($cart && $cart->cart_items) {
+            $this->cartItems = $cart->cart_items;
             $this->cartTotal = $this->cartItems->sum(function ($item) {
                 return $item->product->price * $item->quantity;
             });
+        } else {
+            $this->cartItems = [];
+            $this->cartTotal = 0;
         }
     }
 
