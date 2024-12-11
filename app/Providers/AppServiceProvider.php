@@ -3,9 +3,11 @@
 namespace App\Providers;
 
 use App\Models\CartItem;
+use App\Models\Category;
 use App\Models\Product;
 use App\Models\User;
 use App\Observers\CartItemObserver;
+use App\Observers\CategoryObserver;
 use App\Observers\ProductObserver;
 use App\Observers\UserObserver;
 use Illuminate\Support\Facades\Config;
@@ -27,8 +29,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Product::observe(ProductObserver::class);
+        // Product::observe(ProductObserver::class);
         CartItem::observe(CartItemObserver::class);
         User::observe(UserObserver::class);
+        Category::observe(CategoryObserver::class);
     }
 }

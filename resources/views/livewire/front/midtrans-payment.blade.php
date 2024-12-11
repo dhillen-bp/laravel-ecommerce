@@ -12,7 +12,7 @@
                         'X-CSRF-TOKEN': '{{ csrf_token() }}'
                     },
                     body: JSON.stringify({
-                        order_id: {{ $order->id }}
+                        order_id: "{{ $order->id }}"
                     })
                 })
                 .then(response => response.json())

@@ -13,7 +13,7 @@ class MyOrder extends Component
 
     public function mount()
     {
-        $this->orders = Order::with('orderItems.product', 'payment')->where('user_id', auth()->id())->get();
+        $this->orders = Order::with('orderItems.product', 'payment')->where('user_id', auth()->id())->latest()->get();
     }
 
     public function render()

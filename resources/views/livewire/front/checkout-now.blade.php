@@ -48,11 +48,9 @@
         <div class="rounded-lg border p-4 shadow">
             <h2 class="mb-4 text-lg font-semibold">Ringkasan Pesanan</h2>
             <div class="space-y-4">
-
                 <div class="flex items-start justify-between">
                     <div class="flex gap-3">
                         <div>
-
                             <img src="{{ $product->image ? Storage::url($product->image) : asset('images/laravel.svg') }}"
                                 class="w-16" alt="Product Image">
                         </div>
@@ -92,7 +90,7 @@
 
     <div class="mt-6 text-center">
         <button wire:click="submitOrder" class="w-full rounded-lg bg-green-500 px-6 py-2 text-white hover:bg-green-600">
-            Bayar Sekarang
+            Lanjutkan Bayar Sekarang
         </button>
     </div>
 </div>

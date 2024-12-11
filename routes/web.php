@@ -6,9 +6,10 @@ use Illuminate\Support\Facades\Route;
 use Masmerise\Toaster\Toaster;
 
 Route::get('/', App\Livewire\Front\Home::class)->name('front.index');
+Route::get('/about-us', App\Livewire\Front\AboutUs::class)->name('front.about');
 Route::get('/products', App\Livewire\Front\Product::class)->name('front.products');
 Route::get('/products/{product:slug}', App\Livewire\Front\ProductDetail::class)->name('front.products.show');
-Route::get('/about-us', App\Livewire\Front\AboutUs::class)->name('front.about');
+Route::get('/products/category/{category:slug}', App\Livewire\Front\ProductCategory::class)->name('front.products.category');
 
 Route::middleware(['auth', 'role:customer'])->group(function () {
     Route::get('/my-profile', App\Livewire\Front\MyProfile::class)->name('front.my_profile');

@@ -12,8 +12,10 @@ class ProductObserver
      */
     public function created(Product $product): void
     {
-        Cache::forget('active_products');
+        // Cache::forget('active_products');
         Cache::forget("product_{$product->id}");
+
+        $this->forgetCachePages();
     }
 
     /**
@@ -21,8 +23,10 @@ class ProductObserver
      */
     public function updated(Product $product): void
     {
-        Cache::forget('active_products');
+        // Cache::forget('active_products');
         Cache::forget("product_{$product->id}");
+
+        $this->forgetCachePages();
     }
 
     /**
@@ -30,8 +34,10 @@ class ProductObserver
      */
     public function deleted(Product $product): void
     {
-        Cache::forget('active_products');
+        // Cache::forget('active_products');
         Cache::forget("product_{$product->id}");
+
+        $this->forgetCachePages();
     }
 
     /**
@@ -48,5 +54,17 @@ class ProductObserver
     public function forceDeleted(Product $product): void
     {
         //
+    }
+
+    private function forgetCachePages()
+    {
+        $dataPerPage = 9;
+        $totalPages = Product::where('is_active', 1)->where('stock', '>', 0)->count() / $dataPerPage;
+
+        $totalPages = ceil($totalPages);
+
+        for ($page = 1; $page <= $totalPages; $page++) {
+            Cache::forget('active_products_page_' . $page);
+        }
     }
 }

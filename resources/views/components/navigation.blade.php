@@ -16,7 +16,7 @@
                 </div>
 
                 <!-- Hamburger Icon for Mobile -->
-                <button type="button" class="collapse-toggle btn btn-square btn-secondary btn-outline btn-sm"
+                <button type="button" class="btn btn-square btn-secondary btn-outline collapse-toggle btn-sm"
                     data-collapse="#dropdown-navbar-collapse" aria-controls="dropdown-navbar-collapse"
                     aria-label="Toggle navigation">
                     <span class="size-4 icon-[tabler--menu-2] collapse-open:hidden"></span>
@@ -60,6 +60,10 @@
 
                     <!-- Profile -->
                     @livewire('components.nav-profile')
+                @else
+                    <a href="{{ route('front.login') }}" class="btn btn-success btn-outline" wire:navigate>
+                        Login
+                    </a>
                 @endif
             @endauth
 
@@ -68,6 +72,8 @@
                     Login
                 </a>
             @endguest
+
+
         </div>
     </div>
 </nav>

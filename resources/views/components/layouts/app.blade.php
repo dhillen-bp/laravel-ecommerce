@@ -28,8 +28,8 @@
     <x-footer />
 
     <x-toaster-hub />
-    @livewireScripts
     @stack('after-script')
+    @livewireScripts
 </body>
 
 </html>

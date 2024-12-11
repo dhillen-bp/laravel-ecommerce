@@ -18,6 +18,7 @@ class PaymentController extends Controller
     public function createPayment(Request $request)
     {
         try {
+            \Log::info('request: ', $request->all());
             // Konfigurasi Midtrans
             Config::$serverKey = config('midtrans.server_key');
             Config::$isProduction = config('midtrans.is_production');
@@ -63,7 +64,7 @@ class PaymentController extends Controller
                     ]
                 ),
             ];
-
+            // \Log::info('Transaction Details: ', $params);
             // Buat token pembayaran
             $snapToken = Snap::getSnapToken($params);
 
@@ -73,11 +74,11 @@ class PaymentController extends Controller
 
             return response()->json(['snap_token' => $snapToken]);
         } catch (\Exception $e) {
-            // Tangkap error dan kembalikan pesan kesalahan
+            \Log::error('Error Occurred: ' . $e->getMessage());
             return response()->json([
                 'error' => true,
                 'message' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(), // Bisa digunakan untuk debug
+                'trace' => $e->getTraceAsString(),
             ], 500);
         }
     }
@@ -124,7 +125,7 @@ class PaymentController extends Controller
                         'bank' => $bank,
                         'gross_amount' => $grossAmount,
                         'midtrans_status' => $transaction,
-                        'json_response' => json_encode($notif), // Menyimpan respon lengkap untuk debug
+                        'json_response' => json_encode($notif),
                     ]);
 
                     Toaster::success('Pembayaran berhasil dilakukan!');

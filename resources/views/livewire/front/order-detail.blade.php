@@ -1,6 +1,6 @@
 <div class="container mx-auto min-h-screen p-6">
     <h1 class="mb-6 mt-20 text-3xl font-semibold">Order Transaction:
-        {{ $order->payment ? $order->payment->transaction_id : 'Belum melakukan pembayaran' }}</h1>
+        {{ $order->payment ? $order->payment->transaction_id : 'Pembayaran Gagal' }}</h1>
 
     <div class="rounded-lg border bg-white p-4 shadow-md">
         <h2 class="text-xl font-semibold">Products</h2>
@@ -33,7 +33,7 @@
                     <p class="text-sm text-gray-600">Status: <livewire:components.order-status-badge
                             :status="$order->status" /></p>
                     <p class="text-sm text-gray-600">Payment Status:
-                        <livewire:components.payment-status-badge :status="$order->payment->status" />
+                        <livewire:components.payment-status-badge :status="$order->payment ? $order->payment->status : 'Unpaid'" />
                     </p>
                 </div>
                 <p class="text-base font-semibold text-gray-600">Total: Rp
@@ -51,11 +51,12 @@
             <span>Payment Type: <span class="font-semibold">{{ $order->payment->payment_type }}</span></span>
             <span>Tanggal Transaksi: <span class="font-semibold">{{ $order->payment->created_at }}</span></span>
         @else
-            <div>
-                <span>Lanjutkan Pembayaran:</span>
-                <a href="{{ route('front.payment', $order->id) }}" class="btn btn-primary w-full">Tekan disini untuk
-                    melanjutkan
-                    pembayaran</a>
+            <div class="space-y-2">
+                <p class="text-xl font-semibold"><span class="text-error">Pembayaran Gagal</span>: Pembayaran Anda tidak
+                    berhasil diproses.</p>
+                <a href="{{ route('front.products') }}" wire:navigate~ class="btn btn-primary w-full">Tekan disini
+                    untuk
+                    melihat semua produk kami</a>
             </div>
         @endif
 

@@ -95,7 +95,7 @@
     <!-- Payment Button -->
     <div class="mt-6 text-center">
         <button wire:click="submitOrder" class="btn btn-primary w-full">
-            Bayar Sekarang
+            Lanjutkan Bayar Sekarang
         </button>
     </div>
 </div>

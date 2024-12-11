@@ -14,7 +14,7 @@
                     <p class="text-sm text-gray-600">Order Status: <livewire:components.order-status-badge
                             :status="$order->status" /></p>
                     <p class="text-sm text-gray-600">Payment Status:
-                        <livewire:components.payment-status-badge :status="$order->payment->status" />
+                        <livewire:components.payment-status-badge :status="$order->payment ? $order->payment->status : 'Unpaid'" />
                     </p>
                 </div>
 

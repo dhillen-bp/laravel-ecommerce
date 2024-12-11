@@ -2,25 +2,35 @@
 
 namespace App\Livewire\Front;
 
-use App\Models\Cart;
-use App\Models\CartItem;
 use App\Models\Product as ModelsProduct;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Title;
 use Livewire\Component;
-use Masmerise\Toaster\Toaster;
+use Livewire\WithPagination;
 
 #[Title('Products')]
 class Product extends Component
 {
+    use WithPagination;
+
+    public $search = '';
+
+    public function updatedSearch()
+    {
+        $this->resetPage();
+    }
 
     public function render()
     {
-        $products = cache()->remember('active_products', now()->addMinutes(30), function () {
-            return ModelsProduct::where('is_active', 1)->where('stock', '>', 0)->get();
-        });
+        $products = ModelsProduct::with('category')->where('is_active', 1)
+            ->when($this->search, function ($query) {
+                $query->where('name', 'like', '%' . $this->search . '%');
+            })
+            ->where('stock', '>', 0)
+            ->latest()
+            ->paginate(9);
 
-        return view('livewire.front.product', compact('products'));
+        return view('livewire.front.product', [
+            'products' => $products,
+        ]);
     }
 }

@@ -5,6 +5,7 @@ namespace App\Livewire\Front;
 use App\Models\Order;
 use Livewire\Attributes\Title;
 use Livewire\Component;
+use Masmerise\Toaster\Toaster;
 
 #[Title('Order Detail')]
 class OrderDetail extends Component
@@ -15,7 +16,6 @@ class OrderDetail extends Component
     {
         $this->order = Order::with('orderItems.product')->findOrFail($order_id);
     }
-
 
     public function render()
     {

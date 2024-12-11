@@ -24,7 +24,8 @@ class PaymentResource extends Resource
 {
     protected static ?string $model = Payment::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-currency-dollar';
+    protected static ?int $navigationSort = 4;
 
     public static function form(Form $form): Form
     {
@@ -34,7 +35,6 @@ class PaymentResource extends Resource
                 Group::make([
                     TextInput::make('price')->disabled()
                 ])->relationship('order'),
-                FileUpload::make('image')->image()->directory('payment_proofs')->columnSpanFull(),
                 Select::make('status')
                     ->options([
                         'success' => 'Success',
@@ -50,7 +50,6 @@ class PaymentResource extends Resource
             ->columns([
                 TextColumn::make('order_id')->sortable(),
                 TextColumn::make('transaction_id')->sortable()->searchable(),
-                ImageColumn::make('payment_proof'),
                 TextColumn::make('status')
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {

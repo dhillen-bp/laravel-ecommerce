@@ -4,23 +4,46 @@
             class="relative mt-9 max-h-96 w-full md:max-h-screen">
             <div class="carousel h-full rounded-none">
                 <div class="carousel-body relative h-96 opacity-0 md:h-full">
-                    <!-- Slide 1 -->
                     <div class="carousel-slide">
-                        <div class="flex h-full justify-center">
-                            <img src="https://cdn.flyonui.com/fy-assets/components/carousel/image-22.png"
-                                class="size-full object-cover" alt="game" />
+                        <div class="flex h-full items-center justify-center">
+                            <div class="absolute inset-0 bg-black opacity-80"></div>
+                            <div class="absolute space-y-3 text-center">
+                                <h2 class="text-3xl font-bold text-primary md:text-6xl">Selamat Datang</h2>
+                                <p class="-mt-2 text-lg text-primary md:text-xl">Lihat dan kunjungi berbagai produk
+                                    menarik
+                                    pada toko
+                                    kami.</p>
+                                <a href="{{ route('front.products') }}" wire:navigate class="btn btn-primary mt-3">
+                                    Lihat Produk Kami
+                                </a>
+                            </div>
+                            <img src="{{ asset('images/hero-banner-1.svg') }}"
+                                class="size-full max-h-[90vh] object-cover" alt="game" />
                         </div>
                     </div>
-                    <!-- Slide 2 -->
                     <div class="carousel-slide">
-                        <div class="flex h-full justify-center bg-base-300/80 p-6">
-                            <span class="self-center text-2xl sm:text-4xl">Second slide</span>
+                        <div class="flex h-full items-center justify-center">
+                            <div class="absolute space-y-3 text-center">
+                                <h2 class="text-3xl font-bold text-primary md:text-6xl">Tentang Kami</h2>
+                                <p class="-mt-2 text-lg text-primary md:text-xl">Ingin tahu tentang toko kami? Dan cari
+                                    tahu layanan apa saja yang kami berikan.</p>
+                                <a href="{{ route('front.about') }}" wire:navigate class="btn btn-primary mt-3">
+                                    Lihat Tentang Kami
+                                </a>
+                            </div>
+                            <img src="{{ asset('images/hero-banner-2.svg') }}"
+                                class="size-full max-h-[90vh] object-cover" alt="game" />
                         </div>
                     </div>
-                    <!-- Slide 3 -->
                     <div class="carousel-slide">
-                        <div class="flex h-full justify-center bg-base-300 p-6">
-                            <span class="self-center text-2xl sm:text-4xl">Third slide</span>
+                        <div class="flex h-full items-center justify-center">
+                            <div class="absolute space-y-3 text-center">
+                                <h2 class="text-3xl font-bold text-primary md:text-6xl">Laravel Olsop</h2>
+                                <p class="-mt-2 text-lg text-primary md:text-xl">Laravel Olsop adalah ecommerce dengan
+                                    produk tersedia dari berbagai kebutuhan pengguna.</p>
+                            </div>
+                            <img src="{{ asset('images/hero-banner-3.svg') }}"
+                                class="size-full max-h-[90vh] object-cover" alt="game" />
                         </div>
                     </div>
                 </div>
@@ -30,14 +53,12 @@
                     <span class="carousel-dot carousel-active:border-primary carousel-active:bg-primary"></span>
                 </div>
             </div>
-            <!-- Previous Slide -->
             <button type="button" class="carousel-prev">
                 <span class="size-9.5 flex items-center justify-center rounded-full bg-base-100 shadow">
                     <span class="size-5 icon-[tabler--chevron-left] cursor-pointer rtl:rotate-180"></span>
                 </span>
                 <span class="sr-only">Previous</span>
             </button>
-            <!-- Next Slide -->
             <button type="button" class="carousel-next">
                 <span class="sr-only">Next</span>
                 <span class="size-9.5 flex items-center justify-center rounded-full bg-base-100 shadow">
@@ -48,6 +69,8 @@
     </section>
 
     <section class="mt-10 md:px-16">
+        @livewire('components.list-category')
+
         <h1 class="mb-6 text-center text-3xl font-bold">Produk Terbaru</h1>
         <div class="grid grid-cols-2 gap-6 sm:grid-cols-2 md:grid-cols-3">
             @foreach ($products as $product)
@@ -74,7 +97,6 @@
         </div>
     </section>
 
-    <!-- Layanan Section -->
     <section class="mt-12 bg-gray-50 py-12 md:px-16">
         <h1 class="mb-6 text-center text-3xl font-bold">Layanan yang Kami Berikan</h1>
         <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3">
