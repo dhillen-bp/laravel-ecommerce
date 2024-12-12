@@ -32,6 +32,7 @@ class UserObserver
     public function deleted(User $user): void
     {
         Cache::forget("user_{$user->id}");
+        Cache::put('user_' . Auth::id(), serialize($user), now()->addMinutes(10));
     }
 
     /**
@@ -39,7 +40,8 @@ class UserObserver
      */
     public function restored(User $user): void
     {
-        //
+        Cache::forget("user_{$user->id}");
+        Cache::put('user_' . Auth::id(), serialize($user), now()->addMinutes(10));
     }
 
     /**
@@ -47,6 +49,7 @@ class UserObserver
      */
     public function forceDeleted(User $user): void
     {
-        //
+        Cache::forget("user_{$user->id}");
+        Cache::put('user_' . Auth::id(), serialize($user), now()->addMinutes(10));
     }
 }

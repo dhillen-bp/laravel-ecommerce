@@ -6,6 +6,7 @@ use App\Models\CartItem;
 use App\Models\Order;
 use App\Models\OrderItem;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Title;
 use Livewire\Attributes\Validate;
@@ -111,10 +112,11 @@ class Checkout extends Component
 
             session()->forget('checkoutItems');
 
-            $this->dispatch('cartUpdated');
-
             DB::commit();
             Toaster::success('Berhasil melakukan pemesanan!');
+            Cache::forget("cart_" . $this->user->id);
+
+            $this->dispatch('cartUpdated');
 
             return $this->redirect(route('front.payment', ['order_id' => $order->id]));
         } catch (\Exception $e) {

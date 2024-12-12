@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\ProductResource\Pages;
 use App\Filament\Resources\ProductResource\RelationManagers;
+use App\Models\Category;
 use App\Models\Product;
 use Filament\Forms;
 use Filament\Forms\Components\FileUpload;
@@ -43,7 +44,11 @@ class ProductResource extends Resource
                         '1' => 'Active',
                         '0' => 'Inactive',
                     ]),
-                FileUpload::make('image')->required()->image()->directory('products')->columnSpanFull(),
+                Select::make('category_id')
+                    ->label('Category')
+                    ->options(Category::all()->pluck('name', 'id'))
+                    ->searchable(),
+                FileUpload::make('image')->required()->image()->directory('products'),
                 RichEditor::make('description')->columnSpanFull()
                     ->toolbarButtons([
                         'attachFiles',

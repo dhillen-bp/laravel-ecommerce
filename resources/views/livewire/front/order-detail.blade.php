@@ -49,6 +49,7 @@
             <span>Payment Status: <span class="font-semibold">{{ $order->payment->status }}</span></span>
             <span>Midtrans Status: <span class="font-semibold">{{ $order->payment->midtrans_status }}</span></span>
             <span>Payment Type: <span class="font-semibold">{{ $order->payment->payment_type }}</span></span>
+            <span>Bank: <span class="font-semibold">{{ $order->payment->bank }}</span></span>
             <span>Tanggal Transaksi: <span class="font-semibold">{{ $order->payment->created_at }}</span></span>
         @else
             <div class="space-y-2">

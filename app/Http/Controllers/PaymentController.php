@@ -18,7 +18,7 @@ class PaymentController extends Controller
     public function createPayment(Request $request)
     {
         try {
-            \Log::info('request: ', $request->all());
+            Log::info('request: ', $request->all());
             // Konfigurasi Midtrans
             Config::$serverKey = config('midtrans.server_key');
             Config::$isProduction = config('midtrans.is_production');
@@ -74,7 +74,7 @@ class PaymentController extends Controller
 
             return response()->json(['snap_token' => $snapToken]);
         } catch (\Exception $e) {
-            \Log::error('Error Occurred: ' . $e->getMessage());
+            Log::error('Error Occurred: ' . $e->getMessage());
             return response()->json([
                 'error' => true,
                 'message' => $e->getMessage(),

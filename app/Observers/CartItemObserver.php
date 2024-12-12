@@ -36,7 +36,7 @@ class CartItemObserver
      */
     public function restored(CartItem $cartItem): void
     {
-        //
+        Cache::forget("cart_" . $cartItem->cart->user_id);
     }
 
     /**
@@ -44,6 +44,6 @@ class CartItemObserver
      */
     public function forceDeleted(CartItem $cartItem): void
     {
-        //
+        Cache::forget("cart_" . $cartItem->cart->user_id);
     }
 }
