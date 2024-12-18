@@ -25,10 +25,31 @@
                             alert('Menunggu pembayaran!');
                             console.log(result);
                         },
-                        onError: function(result) {
+                        onError: async function(result) {
                             alert('Pembayaran gagal!');
-                            console.log(result);
+
+                            try {
+                                const response = await fetch(
+                                    "/payment-failed/{{ $order->id }}", {
+                                        method: 'POST',
+                                        headers: {
+                                            'Content-Type': 'application/json',
+                                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                        },
+                                        body: JSON
+                                            .stringify({}),
+                                    });
+
+                                if (response.ok) {
+                                    window.location.href = '/payment-failed';
+                                } else {
+                                    alert('Gagal memperbarui status pesanan');
+                                }
+                            } catch (error) {
+                                console.error('Terjadi kesalahan:', error);
+                            }
                         }
+
                     });
                 });
         });

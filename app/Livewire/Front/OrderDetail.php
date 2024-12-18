@@ -14,7 +14,7 @@ class OrderDetail extends Component
 
     public function mount($order_id)
     {
-        $this->order = Order::with('orderItems.product')->findOrFail($order_id);
+        $this->order = Order::with('orderItems.productVariant.product', 'orderItems.productVariant.variant')->findOrFail($order_id);
     }
 
     public function render()

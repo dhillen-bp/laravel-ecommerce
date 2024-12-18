@@ -9,14 +9,15 @@
             <div class="mt-4 space-y-4">
                 <div class="flex items-center justify-between">
                     <div class="flex items-center">
-                        <img src="{{ $orderItem->product->image ? Storage::url($orderItem->product->image) : asset('images/laravel.svg') }}"
+                        <img src="{{ $orderItem->productVariant->product->image ? Storage::url($orderItem->productVariant->product->image) : asset('images/laravel.svg') }}"
                             alt="Product Image" class="mr-4 h-12 w-12 object-cover">
                         <div>
-                            <span class="font-medium text-gray-700">{{ $orderItem->product->name }}</span>
+                            <span class="font-medium text-gray-700">{{ $orderItem->productVariant->product->name }} -
+                                {{ $orderItem->productVariant->variant->name }}</span>
                             <div class="flex flex-col">
                                 <span class="text-sm text-gray-600">Quantity: {{ $orderItem->quantity }}</span>
                                 <span class="text-sm text-gray-600">Harga satuan: Rp
-                                    {{ number_format($orderItem->product->price, 0, ',', '.') }}</span>
+                                    {{ number_format($orderItem->productVariant->price, 0, ',', '.') }}</span>
                             </div>
                         </div>
                     </div>
@@ -36,8 +37,13 @@
                         <livewire:components.payment-status-badge :status="$order->payment ? $order->payment->status : 'Unpaid'" />
                     </p>
                 </div>
-                <p class="text-base font-semibold text-gray-600">Total: Rp
-                    {{ number_format($order->price + $order->shipping_cost, 0, ',', '.') }}</p>
+                <div class="flex flex-col items-end justify-end">
+                    <p>Total item produk + Biaya Ongkir</p>
+                    <p>{{ number_format($order->price, 0, ',', '.') . ' + ' . number_format($order->shipping_cost, 0, ',', '.') }}
+                    </p>
+                    <p class="text-base font-semibold text-gray-600">Total: Rp
+                        {{ number_format($order->price + $order->shipping_cost, 0, ',', '.') }}</p>
+                </div>
             </div>
         </div>
     </div>

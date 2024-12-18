@@ -51,20 +51,22 @@
                 <div class="flex items-start justify-between">
                     <div class="flex gap-3">
                         <div>
-                            <img src="{{ $product->image ? Storage::url($product->image) : asset('images/laravel.svg') }}"
+                            <img src="{{ $selectedVariant->product->image ? Storage::url($selectedVariant->product->image) : asset('images/laravel.svg') }}"
                                 class="w-16" alt="Product Image">
                         </div>
                         <div>
-                            <p class="font-medium">{{ $product->name }}</p>
+                            <p class="font-medium">{{ $selectedVariant->product->name }} -
+                                {{ $selectedVariant->variant->name }}
+                            </p>
                             <p class="text-sm text-gray-500">Qty: 1</p>
                             <p class="text-sm text-gray-500">Harga Satuan: Rp
-                                {{ number_format($product->price, 0, ',', '.') }}</p>
+                                {{ number_format($selectedVariant->price, 0, ',', '.') }}</p>
                         </div>
                     </div>
                     <div>
                         <p class="font-semibold">Subtotal</p>
                         <p class="font-medium">Rp
-                            {{ number_format($product->price * 1, 0, ',', '.') }}</p>
+                            {{ number_format($selectedVariant->price * 1, 0, ',', '.') }}</p>
                     </div>
                 </div>
 

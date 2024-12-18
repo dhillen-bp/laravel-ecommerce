@@ -34,7 +34,9 @@ class ProductCategory extends Component
             ->when($this->search, function ($query) {
                 $query->where('name', 'like', '%' . $this->search . '%');
             })
-            ->where('stock', '>', 0)
+            ->whereHas('variants', function ($query) {
+                $query->where('stock', '>', 1);
+            })
             ->latest()
             ->paginate(9);
 

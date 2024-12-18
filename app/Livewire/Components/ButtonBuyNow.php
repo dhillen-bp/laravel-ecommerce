@@ -6,16 +6,16 @@ use Livewire\Component;
 
 class ButtonBuyNow extends Component
 {
-    public $productId;
+    public $productVariantId;
 
-    public function mount($productId)
+    public function mount($productVariantId)
     {
-        $this->productId = $productId;
+        $this->productVariantId = $productVariantId;
     }
 
     public function checkoutNow()
     {
-        session()->put('checkoutItems', [strval($this->productId)]);
+        session()->put('checkoutItems', [strval($this->productVariantId)]);
 
         return $this->redirect(route('front.checkout_now'));
     }

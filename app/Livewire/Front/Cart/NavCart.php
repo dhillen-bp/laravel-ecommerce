@@ -27,13 +27,13 @@ class NavCart extends Component
         $userId = Auth::id();
 
         $cart = Cache::remember("cart_{$userId}", now()->addMinutes(10), function () use ($userId) {
-            return Cart::where('user_id', $userId)->with('cart_items.product')->first();
+            return Cart::where('user_id', $userId)->with('cart_items.productVariant.product', 'cart_items.productVariant.variant')->first();
         });
 
         if ($cart && $cart->cart_items) {
             $this->cartItems = $cart->cart_items;
             $this->cartTotal = $this->cartItems->sum(function ($item) {
-                return $item->product->price * $item->quantity;
+                return $item->productVariant->price * $item->quantity;
             });
         } else {
             $this->cartItems = [];

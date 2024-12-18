@@ -11,7 +11,14 @@ class Home extends Component
 {
     public function render()
     {
-        $products = Product::where('is_active', 1)->where('stock', '>', 0)->take(3)->get();
+        $products = Product::with('category')
+            ->where('is_active', 1)
+            ->whereHas('variants', function ($query) {
+                $query->where('stock', '>', 1);
+            })
+            ->take(3)
+            ->get();
+
         return view('livewire.front.home', compact('products'));
     }
 }

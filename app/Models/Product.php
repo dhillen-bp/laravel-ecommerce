@@ -10,7 +10,7 @@ class Product extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'description', 'slug', 'image', 'price', 'stock', 'is_active', 'category_id'];
+    protected $fillable = ['name', 'description', 'slug', 'image', 'is_active', 'category_id'];
 
     public function setNameAttribute($value)
     {
@@ -26,5 +26,17 @@ class Product extends Model
     public function category()
     {
         return $this->belongsTo(Category::class);
+    }
+
+    // public function variants()
+    // {
+    //     return $this->belongsToMany(Variant::class, 'product_variants');
+    // }
+
+    public function variants()
+    {
+        return $this->belongsToMany(Variant::class, 'product_variants')
+            ->withPivot('id', 'price', 'stock')
+            ->withTimestamps();
     }
 }

@@ -22,9 +22,10 @@
                     <div class="mt-4 space-y-4">
                         <div class="flex items-center justify-between">
                             <div class="flex items-center">
-                                <img src="{{ $orderItem->product->image ? Storage::url($orderItem->product->image) : asset('images/laravel.svg') }}"
+                                <img src="{{ $orderItem->productVariant->product->image ? Storage::url($orderItem->productVariant->product->image) : asset('images/laravel.svg') }}"
                                     alt="Product Image" class="mr-4 h-12 w-12 object-cover">
-                                <span class="font-medium text-gray-700">{{ $orderItem->product->name }}</span>
+                                <span class="font-medium text-gray-700">{{ $orderItem->productVariant->product->name }}
+                                    - {{ $orderItem->productVariant->variant->name }}</span>
                             </div>
                             <span class="text-sm text-gray-600">Rp
                                 {{ number_format($orderItem->price * $orderItem->quantity, 0, ',', '.') }}</span>

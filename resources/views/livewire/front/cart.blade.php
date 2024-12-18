@@ -9,10 +9,11 @@
                         <input type="checkbox" wire:model="selectedItems" value="{{ $item->id }}"
                             id="item-{{ $item->id }}">
                         <div class="flex items-start gap-4">
-                            <img src="{{ $item->product->image ? Storage::url($item->product->image) : asset('images/laravel.svg') }}"
+                            <img src="{{ $item->productVariant->product->image ? Storage::url($item->productVariant->product->image) : asset('images/laravel.svg') }}"
                                 alt="Produk" class="h-24 w-24 rounded-md object-cover">
                             <div class="space-y-3">
-                                <h2 class="text-lg font-semibold">{{ $item->product->name }}</h2>
+                                <h2 class="text-lg font-semibold">{{ $item->productVariant->product->name }} -
+                                    {{ $item->productVariant->variant->name }}</h2>
                                 <div class="flex items-center gap-2">
                                     <span class="text-sm">Quantity:</span>
                                     <div class="qty-container flex items-center rounded-md border border-gray-300">
@@ -23,7 +24,7 @@
                                     </div>
                                 </div>
                                 <span class="text-sm">Harga satuan produk: <span>Rp
-                                        {{ $item->product->price }}</span></span>
+                                        {{ $item->productVariant->price }}</span></span>
                             </div>
                         </div>
                     </div>
@@ -32,7 +33,7 @@
                         <button wire:click="removeFromCart({{ $item->id }})"
                             class="btn btn-error btn-sm self-end rounded-full">Hapus</button>
                         <span class="self-end text-lg font-semibold">Rp
-                            {{ number_format($item->product->price * $item->quantity, 0, ',', '.') }}</span>
+                            {{ number_format($item->productVariant->price * $item->quantity, 0, ',', '.') }}</span>
                     </div>
                 </div>
             </label>

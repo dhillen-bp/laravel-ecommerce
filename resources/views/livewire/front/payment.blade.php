@@ -16,7 +16,8 @@
             <ul class="list-disc space-y-2 pl-6">
                 @foreach ($order->orderItems as $item)
                     <li>
-                        <span><strong>{{ $item->product->name }}</strong></span> -
+                        <span><strong>{{ $item->productVariant->product->name }}
+                                ({{ $item->productVariant->variant->name }})</strong></span> -
                         <span>{{ $item->quantity }} x Rp{{ number_format($item->price, 0, ',', '.') }}</span>
                     </li>
                 @endforeach

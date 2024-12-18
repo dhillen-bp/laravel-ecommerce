@@ -29,7 +29,7 @@
                     </span>
                     <p class="truncate text-sm text-gray-500">{{ $product->description }}</p>
                     <div class="flex justify-between">
-                        <p>Stok: {{ $product->stock }}</p>
+                        <p>Stok: {{ $product->variants->first()->pivot->stock }}</p>
                         <span class="badge badge-primary badge-soft">{{ $product->category->name }}</span>
                     </div>
                     <div class="mb-4 mt-2 flex items-center justify-between gap-6">
@@ -40,7 +40,7 @@
 
                         @livewire('components.button-buy-now', ['productId' => $product->id], key('button-buy-now-' . $product->id))
                     </div>
-                    @livewire('front.cart.add-to-cart', ['productId' => $product->id], key('add-to-cart-' . $product->id))
+                    @livewire('front.cart.add-to-cart', ['productVariantId' => $product->variants->first()->pivot->id, 'stock' => $product->variants->first()->pivot->stock], key('add-to-cart-' . $product->id))
                 </div>
             @endforeach
         </div>

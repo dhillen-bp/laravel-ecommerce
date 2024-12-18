@@ -79,18 +79,22 @@
                         alt="Produk 1" class="mb-4 w-full rounded-md object-cover md:h-56">
                     <span class="flex items-center justify-between">
                         <h2 class="text-lg font-semibold">{{ $product->name }}</h2>
-                        <h2 class="font-semibold">Rp {{ number_format($product->price, 0, ',', '.') }}</h2>
+                        <h2 class="font-semibold">Rp
+                            {{ number_format($product->variants->first()->pivot->price, 0, ',', '.') }}</h2>
                     </span>
                     <p class="truncate text-sm text-gray-500">{{ $product->description }}</p>
+                    <div class="flex items-center justify-between">
+                        <p>Stok: {{ $product->variants->first()->pivot->stock }}</p>
+                        <span class="badge badge-primary badge-soft">{{ $product->category->name }}</span>
+                    </div>
                     <div class="mb-4 mt-2 flex items-center justify-between gap-6">
                         <a href="{{ route('front.products.show', $product) }}" class="btn btn-info" wire:navigate><span
                                 class="icon-[tabler--info-square] h-5"></span> <span
                                 class="hidden text-sm lg:block">Lihat
                                 Detail</span></a>
-
-                        @livewire('components.button-buy-now', ['productId' => $product->id])
+                        @livewire('components.button-buy-now', ['productVariantId' => $product->variants->first()->pivot->id])
                     </div>
-                    @livewire('front.cart.add-to-cart', ['productId' => $product->id])
+                    @livewire('front.cart.add-to-cart', ['productVariantId' => $product->variants->first()->pivot->id, 'stock' => $product->variants->first()->pivot->stock])
 
                 </div>
             @endforeach

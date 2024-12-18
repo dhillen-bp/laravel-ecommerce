@@ -35,7 +35,7 @@ class RegisterForm extends Form
         $user = User::create([
             'name' => $this->name,
             'email' => $this->email,
-            'password' => bcrypt($this->password), // Pastikan password di-encrypt
+            'password' => bcrypt($this->password),
         ]);
         $user->assignRole('customer');
 

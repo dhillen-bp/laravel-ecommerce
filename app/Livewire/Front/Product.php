@@ -21,11 +21,13 @@ class Product extends Component
 
     public function render()
     {
-        $products = ModelsProduct::with('category')->where('is_active', 1)
+        $products = ModelsProduct::with('category', 'variants')->where('is_active', 1)
             ->when($this->search, function ($query) {
                 $query->where('name', 'like', '%' . $this->search . '%');
             })
-            ->where('stock', '>', 0)
+            ->whereHas('variants', function ($query) {
+                $query->where('stock', '>', 1);
+            })
             ->latest()
             ->paginate(9);
 

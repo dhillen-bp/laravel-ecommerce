@@ -21,6 +21,8 @@ Route::middleware(['auth', 'role:customer'])->group(function () {
     Route::get('/payment/{order_id}', App\Livewire\Front\Payment::class)->name('front.payment');
 
     Route::post('/payment/create', [PaymentController::class, 'createPayment']);
+    Route::post('/payment-failed/{order}', [PaymentController::class, 'paymentFailed']);
+    Route::get('/payment-failed', [PaymentController::class, 'paymentFailedMessage']);
 });
 Route::post('/payment/callback', [PaymentController::class, 'paymentCallback']);
 
@@ -34,3 +36,7 @@ Route::post('/logout', function () {
     Toaster::success('Anda berhasil logout!');
     return redirect()->route('front.login');
 })->name('front.logout');
+
+Route::middleware(['auth', 'role:owner'])->group(function () {
+    // Route::get('products/{product}/variants', [ProductVariantController::class, 'index'])->name('products.variants');
+});

@@ -54,11 +54,11 @@ class Checkout extends Component
         }
 
         $this->cartItems = CartItem::whereIn('id', $selectedItems)
-            ->with('product')
+            ->with('productVariant.product', 'productVariant.variant')
             ->get();
 
         $this->totalProductPrice = $this->cartItems->sum(function ($item) {
-            return $item->product->price * $item->quantity;
+            return $item->productVariant->price * $item->quantity;
         });
 
         $this->totalPrice = $this->totalProductPrice;
@@ -97,9 +97,9 @@ class Checkout extends Component
             foreach ($this->cartItems as $item) {
                 OrderItem::create([
                     'order_id' => $order->id,
-                    'product_id' => $item->product->id,
+                    'product_variant_id' => $item->productVariant->id,
                     'quantity' => $item->quantity,
-                    'price' => $item->product->price,
+                    'price' => $item->productVariant->price,
                 ]);
             }
 
@@ -125,6 +125,7 @@ class Checkout extends Component
             return;
         }
     }
+
     public function render()
     {
         return view('livewire.front.checkout');

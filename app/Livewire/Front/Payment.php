@@ -21,8 +21,13 @@ class Payment extends Component
 
     public function mount($order_id)
     {
-        $this->order = Order::findOrFail($order_id);
+        $this->order = Order::with('orderItems.productVariant.product', 'orderItems.productVariant.variant')->findOrFail($order_id);
         $this->user = Auth::user();
+
+        if ($this->order->status !== 'pending') {
+            Toaster::error('Pesanan ini tidak dapat diproses lebih lanjut.');
+            return $this->redirect(route('front.order'));
+        }
     }
 
 

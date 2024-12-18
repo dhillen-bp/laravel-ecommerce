@@ -9,6 +9,7 @@ use Midtrans\Notification;
 use App\Models\Order;
 use App\Models\Payment;
 use App\Models\Product;
+use App\Models\ProductVariant;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Masmerise\Toaster\Toaster;
@@ -26,7 +27,7 @@ class PaymentController extends Controller
             Config::$is3ds = config('midtrans.is_3ds');
 
             // Ambil data order berdasarkan ID
-            $order = Order::findOrFail($request->order_id);
+            $order = Order::with('orderItems.productVariant.product', 'orderItems.productVariant.variant')->findOrFail($request->order_id);
             $grossAmount = $order->price + $order->shipping_cost;
 
             $params = [
@@ -49,9 +50,9 @@ class PaymentController extends Controller
                     $order->orderItems->map(function ($item) {
                         return [
                             'id' => $item->product_id,
-                            'price' => $item->price,
+                            'price' => $item->productVariant->price,
                             'quantity' => $item->quantity,
-                            'name' => $item->product->name,
+                            'name' => $item->productVariant->product->name,
                         ];
                     })->toArray(),
                     [
@@ -109,10 +110,26 @@ class PaymentController extends Controller
                     $order->save();
 
                     foreach ($order->orderItems as $item) {
-                        $product = Product::find($item->product_id);
-                        if ($product) {
-                            $product->stock -= $item->quantity;
-                            $product->save();
+                        // $product = Product::find($item->product_id);
+                        // $product = Product::where('id', $item->product_id)
+                        //     ->lockForUpdate()
+                        //     ->first();
+                        // if ($product) {
+                        //     $product->stock -= $item->quantity;
+                        //     $product->save();
+                        $productVariant = ProductVariant::where('id', $item->product_variant_id)
+                            ->lockForUpdate()
+                            ->first();
+
+                        if ($productVariant) {
+                            // Kurangi stok di ProductVariant
+                            $productVariant->stock -= $item->quantity;
+                            $productVariant->save();
+                        } else {
+                            // Jika stok tidak cukup, rollback transaksi dan beri pesan
+                            DB::rollBack();
+                            Toaster::error('Stok produk tidak cukup untuk memenuhi pesanan!');
+                            // throw new \Exception("Stok produk '{$product->name}' tidak cukup untuk memenuhi pesanan.");
                         }
                     }
 
@@ -161,5 +178,17 @@ class PaymentController extends Controller
             DB::rollBack();
             return response()->json(['message' => 'Failed to process notification'], 500);
         }
+    }
+
+    public function paymentFailed(Order $order)
+    {
+        $order->update(['status' => 'failed']);
+    }
+
+    public function paymentFailedMessage()
+    {
+        Toaster::error("Gagal melakukan pembayaran!");
+
+        return redirect()->route('front.order');
     }
 }

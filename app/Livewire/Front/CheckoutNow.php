@@ -5,6 +5,7 @@ namespace App\Livewire\Front;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Product;
+use App\Models\ProductVariant;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Title;
@@ -17,7 +18,9 @@ class CheckoutNow extends Component
 {
     #[Validate]
 
-    public $product;
+    // public $product;
+    public $selectedVariant;
+
     public $totalPrice = 0;
     public $totalProductPrice = 0;
     public $user;
@@ -52,10 +55,15 @@ class CheckoutNow extends Component
             return $this->redirect(route('front.cart'));
         }
 
-        $this->product = Product::whereIn('id', $selectedItems)
-            ->first();
+        // $this->product = Product::whereIn('id', $selectedItems)
+        //     ->first();
+        $this->selectedVariant = ProductVariant::with('product', 'variant')->whereIn('id', $selectedItems)->first();
+        if (!$this->selectedVariant) {
+            Toaster::error('Varian produk yang dipilih tidak ditemukan.');
+            return $this->redirect(route('front.cart'));
+        }
 
-        $this->totalProductPrice = $this->product->price;
+        $this->totalProductPrice = $this->selectedVariant->price;
 
         $this->totalPrice = $this->totalProductPrice;
 
@@ -80,7 +88,6 @@ class CheckoutNow extends Component
         DB::beginTransaction();
         try {
             $validated = $this->validate();
-            // dd($validated);
 
             $order = Order::create([
                 'user_id' => Auth::id(),
@@ -93,9 +100,9 @@ class CheckoutNow extends Component
 
             OrderItem::create([
                 'order_id' => $order->id,
-                'product_id' => $this->product->id,
+                'product_variant_id' => $this->selectedVariant->id,
                 'quantity' => 1,
-                'price' => $this->product->price,
+                'price' => $this->selectedVariant->price,
             ]);
 
             session()->forget('checkoutItems');

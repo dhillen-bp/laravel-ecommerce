@@ -24,18 +24,19 @@
                         id="check-item-{{ $item->id }}">
                     <div class="avatar rounded-none">
                         <div class="w-14 rounded">
-                            <img src="{{ $item->product->image ? Storage::url($item->product->image) : asset('images/laravel.svg') }}"
+                            <img src="{{ $item->productVariant->image ? Storage::url($item->productVariant->image) : asset('images/laravel.svg') }}"
                                 alt="Product Image">
                         </div>
                     </div>
                     <div class="flex items-start gap-8">
                         <div class="flex flex-col justify-between">
-                            <h6 class="truncate text-sm font-semibold">{{ $item->product->name }}</h6>
+                            <h6 class="truncate text-sm font-semibold">{{ $item->productVariant->product->name }} -
+                                {{ $item->productVariant->variant->name }}</h6>
                             <small class="text-sm text-gray-600">Qty: {{ $item->quantity }}</small>
                         </div>
                         <div class="flex flex-col justify-between gap-2">
                             <span class="ml-0 text-sm font-semibold text-green-500">Rp
-                                {{ number_format($item->product->price * $item->quantity, 0, ',', '.') }}</span>
+                                {{ number_format($item->productVariant->price * $item->quantity, 0, ',', '.') }}</span>
                             <button wire:click="removeFromCart({{ $item->id }})"
                                 class="btn btn-error btn-xs">Hapus</button>
                         </div>
