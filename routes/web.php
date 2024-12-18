@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\PaymentController;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Masmerise\Toaster\Toaster;
@@ -12,17 +14,29 @@ Route::get('/products/{product:slug}', App\Livewire\Front\ProductDetail::class)-
 Route::get('/products/category/{category:slug}', App\Livewire\Front\ProductCategory::class)->name('front.products.category');
 
 Route::middleware(['auth', 'role:customer'])->group(function () {
+    Route::get('/email/verify', App\Livewire\Auth\VerifyEmail::class)->name('verification.notice');
+    Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
+        $request->fulfill();
+        return redirect('/my-profile');
+    })->middleware(['auth', 'signed'])->name('verification.verify');
+    // Route::post('/email/verification-notification', function (Request $request) {
+    //     $request->user()->sendEmailVerificationNotification();
+    //     return back()->with('message', 'Verification link sent!');
+    // })->middleware(['auth', 'throttle:6,1'])->name('verification.send');
     Route::get('/my-profile', App\Livewire\Front\MyProfile::class)->name('front.my_profile');
-    Route::get('/carts', App\Livewire\Front\Cart::class)->name('front.cart');
-    Route::get('/my-order', App\Livewire\Front\MyOrder::class)->name('front.order');
-    Route::get('/my-order/{order_id}', App\Livewire\Front\OrderDetail::class)->name('front.order_detail');
-    Route::get('/checkout', App\Livewire\Front\Checkout::class)->name('front.checkout');
-    Route::get('/checkout-now', App\Livewire\Front\CheckoutNow::class)->name('front.checkout_now');
-    Route::get('/payment/{order_id}', App\Livewire\Front\Payment::class)->name('front.payment');
 
-    Route::post('/payment/create', [PaymentController::class, 'createPayment']);
-    Route::post('/payment-failed/{order}', [PaymentController::class, 'paymentFailed']);
-    Route::get('/payment-failed', [PaymentController::class, 'paymentFailedMessage']);
+    Route::middleware(['verified'])->group(function () {
+        Route::get('/carts', App\Livewire\Front\Cart::class)->name('front.cart');
+        Route::get('/my-order', App\Livewire\Front\MyOrder::class)->name('front.order');
+        Route::get('/my-order/{order_id}', App\Livewire\Front\OrderDetail::class)->name('front.order_detail');
+        Route::get('/checkout', App\Livewire\Front\Checkout::class)->name('front.checkout');
+        Route::get('/checkout-now', App\Livewire\Front\CheckoutNow::class)->name('front.checkout_now');
+        Route::get('/payment/{order_id}', App\Livewire\Front\Payment::class)->name('front.payment');
+
+        Route::post('/payment/create', [PaymentController::class, 'createPayment']);
+        Route::post('/payment-failed/{order}', [PaymentController::class, 'paymentFailed']);
+        Route::get('/payment-failed', [PaymentController::class, 'paymentFailedMessage']);
+    });
 });
 Route::post('/payment/callback', [PaymentController::class, 'paymentCallback']);
 

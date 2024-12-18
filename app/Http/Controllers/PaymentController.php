@@ -118,18 +118,19 @@ class PaymentController extends Controller
                         //     $product->stock -= $item->quantity;
                         //     $product->save();
                         $productVariant = ProductVariant::where('id', $item->product_variant_id)
-                            ->lockForUpdate()
-                            ->first();
+                            ->lockForUpdate()->first();
 
                         if ($productVariant) {
                             // Kurangi stok di ProductVariant
                             $productVariant->stock -= $item->quantity;
+                            if ($productVariant->stock < 0) {
+                                DB::rollBack();
+                                Log::error("Stok produk tidak cukup untuk order {$orderId}.");
+                                Toaster::error("Stok produk tidak mencukupi");
+                                return response()->json(['message' => 'Stok tidak cukup'], 400);
+                                // throw new \Exception("Stok produk '{$product->name}' tidak cukup untuk memenuhi pesanan.");
+                            }
                             $productVariant->save();
-                        } else {
-                            // Jika stok tidak cukup, rollback transaksi dan beri pesan
-                            DB::rollBack();
-                            Toaster::error('Stok produk tidak cukup untuk memenuhi pesanan!');
-                            // throw new \Exception("Stok produk '{$product->name}' tidak cukup untuk memenuhi pesanan.");
                         }
                     }
 

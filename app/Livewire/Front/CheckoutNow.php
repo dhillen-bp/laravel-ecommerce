@@ -52,7 +52,7 @@ class CheckoutNow extends Component
 
         if (empty($selectedItems)) {
             Toaster::error('Keranjang checkout kosong. Silakan pilih produk untuk checkout.');
-            return $this->redirect(route('front.cart'));
+            return $this->redirect(route('front.cart'), navigate: true);
         }
 
         // $this->product = Product::whereIn('id', $selectedItems)
@@ -60,7 +60,7 @@ class CheckoutNow extends Component
         $this->selectedVariant = ProductVariant::with('product', 'variant')->whereIn('id', $selectedItems)->first();
         if (!$this->selectedVariant) {
             Toaster::error('Varian produk yang dipilih tidak ditemukan.');
-            return $this->redirect(route('front.cart'));
+            return $this->redirect(route('front.cart'), navigate: true);
         }
 
         $this->totalProductPrice = $this->selectedVariant->price;
@@ -112,7 +112,7 @@ class CheckoutNow extends Component
             DB::commit();
             Toaster::success('Berhasil melakukan pemesanan!');
 
-            return $this->redirect(route('front.payment', ['order_id' => $order->id]));
+            return $this->redirectRoute('front.payment', ['order_id' => $order->id], navigate: true);
         } catch (\Exception $e) {
             DB::rollBack();
             Toaster::error('Terjadi kesalahan saat memproses pesanan. Silakan coba lagi.');

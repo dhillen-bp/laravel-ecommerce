@@ -17,7 +17,7 @@ class ButtonBuyNow extends Component
     {
         session()->put('checkoutItems', [strval($this->productVariantId)]);
 
-        return $this->redirect(route('front.checkout_now'));
+        return $this->redirectRoute('front.checkout_now', navigate: true);
     }
 
     public function render()

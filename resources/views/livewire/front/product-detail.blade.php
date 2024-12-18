@@ -66,10 +66,11 @@
         <div class="mt-4 grid grid-cols-2 gap-6 md:grid-cols-3 lg:grid-cols-4">
             @foreach ($randomProducts as $random)
                 <div class="rounded-lg border p-4">
-                    <img src="{{ $random->image != null ? Storage::url($random->image) : asset('images/laravel.svg') }}"
+                    <img src="{{ $random->image != null ? formatImageUrl($random->image) : asset('images/laravel.svg') }}"
                         class="mb-4 h-48 w-full rounded-lg object-cover" alt="Product">
                     <h3 class="text-lg font-semibold text-gray-800">{{ $random->name }}</h3>
-                    <p class="text-gray-600">Rp. {{ number_format($random->variants->first()->prices, 0, ',', '.') }}
+                    <p class="text-gray-600">Rp.
+                        {{ number_format($random->variants->first()->pivot->price, 0, ',', '.') }}
                     </p>
 
                     <div class="mb-4 mt-2 flex items-center justify-between gap-6">

@@ -6,6 +6,7 @@ use App\Models\Cart;
 use App\Models\CartItem;
 use App\Models\Product;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
 use Livewire\Attributes\On;
 use Livewire\Component;
 use Masmerise\Toaster\Toaster;
@@ -36,7 +37,14 @@ class AddToCart extends Component
     {
         if (!Auth::check()) {
             Toaster::error('Anda harus login agar bisa menambahkan ke keranjang!');
-            return $this->redirect(route('front.login'));
+            return $this->redirect(route('front.login'), navigate: true);
+        }
+
+        if (is_null(Auth::user()->email_verified_at)) {
+            Toaster::error('Anda harus memverifikasi email terlebih dahulu!');
+            return $this->redirect(route('verification.notice'), navigate: true);
+            // return Redirect::route('verification.notice')
+            //     ->error('The form contains several errors');
         }
 
         if ($this->quantity > $this->stock) {

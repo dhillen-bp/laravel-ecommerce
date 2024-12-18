@@ -19,7 +19,7 @@
             @foreach ($products as $product)
                 <div class="flex flex-col rounded-lg border p-4 shadow hover:shadow-lg"
                     wire:key="product-{{ $product->id }}">
-                    <img src="{{ $product->image == null ? asset('images/laravel.svg') : Storage::url($product->image) }}"
+                    <img src="{{ $product->image == null ? asset('images/laravel.svg') : formatImageUrl($product->image) }}"
                         alt="Produk" class="mb-4 w-full rounded-md object-cover md:h-56">
                     <span class="flex items-center justify-between">
                         <h2 class="text-lg font-semibold">{{ $product->name }}</h2>

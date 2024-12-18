@@ -9,8 +9,15 @@
                     class="mt-2 w-full rounded-md border border-gray-300 p-2" wire:model="name" required />
             </div>
 
-            <div>
-                <label for="email" class="font-medium text-gray-600">Email</label>
+            <div class="mt-6">
+                <label for="email" class="flex items-center gap-2 font-medium text-gray-600">
+                    <span>Email</span>
+                    @if ($email_verified_at)
+                        <span class="badge badge-success badge-sm rounded-full">Verified</span>
+                    @else
+                        <span class="badge badge-error badge-sm rounded-full">Unverified</span>
+                    @endif
+                </label>
                 <input wire:model="email" id="email" type="email"
                     class="mt-2 w-full rounded-md border border-gray-300 p-2" wire:model="email" required />
             </div>

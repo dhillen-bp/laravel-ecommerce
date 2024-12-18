@@ -18,13 +18,14 @@ class ProductDetail extends Component
     public function mount(Product $product)
     {
         $this->product = $product->load('variants');
+
         $this->selectedVariant = $this->product->variants->first();
 
         $this->images = collect([
-            $this->product->image ? Storage::url($this->product->image) : null,
+            $this->product->image ? formatImageUrl($this->product->image) : null,
         ])->merge(
             $this->product->variants->pluck('image')->map(function ($image) {
-                return $image ? Storage::url($image) : null;
+                return $image ? formatImageUrl($image) : null;
             })
         )->filter()->values();
 
@@ -55,7 +56,7 @@ class ProductDetail extends Component
 
     public function render()
     {
-        $randomProducts = Product::with('category')
+        $randomProducts = Product::with(['category', 'variants'])
             ->where('is_active', 1)
             ->whereHas('variants', function ($query) {
                 $query->where('stock', '>', 1);

@@ -57,7 +57,7 @@ class NavCart extends Component
 
         session()->put('checkoutItems', $this->selectedItems);
 
-        return $this->redirect(route('front.checkout'));
+        return $this->redirect(route('front.checkout'), navigate: true);
     }
 
     public function render()

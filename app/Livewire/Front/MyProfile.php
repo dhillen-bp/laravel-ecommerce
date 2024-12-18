@@ -16,6 +16,7 @@ class MyProfile extends Component
     public $user;
     public $name;
     public $email;
+    public $email_verified_at;
 
     public $current_password;
     public $new_password;
@@ -27,6 +28,7 @@ class MyProfile extends Component
         $this->user = Auth::user();
         $this->name = $this->user->name;
         $this->email = $this->user->email;
+        $this->email_verified_at = $this->user->email_verified_at;
     }
 
     public function updateProfile()

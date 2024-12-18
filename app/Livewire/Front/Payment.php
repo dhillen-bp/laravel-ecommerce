@@ -26,7 +26,7 @@ class Payment extends Component
 
         if ($this->order->status !== 'pending') {
             Toaster::error('Pesanan ini tidak dapat diproses lebih lanjut.');
-            return $this->redirect(route('front.order'));
+            return $this->redirect(route('front.order'), navigate: true);
         }
     }
 

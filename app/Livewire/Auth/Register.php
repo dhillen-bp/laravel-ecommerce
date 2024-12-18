@@ -14,6 +14,8 @@ class Register extends Component
     public function save()
     {
         $this->form->store();
+
+        return $this->redirectRoute('front.my_profile', navigate: true);
     }
 
     public function render()

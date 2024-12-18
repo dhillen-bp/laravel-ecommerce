@@ -50,7 +50,7 @@ class Checkout extends Component
 
         if (empty($selectedItems)) {
             Toaster::error('Keranjang checkout kosong. Silakan pilih produk untuk checkout.');
-            return $this->redirect(route('front.cart'));
+            return $this->redirect(route('front.cart'), navigate: true);
         }
 
         $this->cartItems = CartItem::whereIn('id', $selectedItems)
@@ -95,11 +95,19 @@ class Checkout extends Component
             ]);
 
             foreach ($this->cartItems as $item) {
+                $productVariant = $item->productVariant()->lockForUpdate()->first();
+
+                if ($productVariant->stock < $item->quantity) {
+                    DB::rollBack();
+                    Toaster::error("Stok produk '{$productVariant->product->name}' tidak cukup.");
+                    return;
+                }
+
                 OrderItem::create([
                     'order_id' => $order->id,
-                    'product_variant_id' => $item->productVariant->id,
+                    'product_variant_id' => $productVariant->id,
                     'quantity' => $item->quantity,
-                    'price' => $item->productVariant->price,
+                    'price' => $productVariant->price,
                 ]);
             }
 
@@ -118,7 +126,7 @@ class Checkout extends Component
 
             $this->dispatch('cartUpdated');
 
-            return $this->redirect(route('front.payment', ['order_id' => $order->id]));
+            return $this->redirect(route('front.payment', ['order_id' => $order->id]), navigate: true);
         } catch (\Exception $e) {
             DB::rollBack();
             Toaster::error('Terjadi kesalahan saat memproses pesanan. Silakan coba lagi.');

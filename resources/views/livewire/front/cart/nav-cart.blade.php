@@ -30,8 +30,8 @@
                     </div>
                     <div class="flex items-start gap-8">
                         <div class="flex flex-col justify-between">
-                            <h6 class="truncate text-sm font-semibold">{{ $item->productVariant->product->name }} -
-                                {{ $item->productVariant->variant->name }}</h6>
+                            <h6 class="truncate text-sm font-semibold">{{ $item->productVariant->product->name }} </h6>
+                            <small class="text-sm">Variant: {{ $item->productVariant->variant->name }}</small>
                             <small class="text-sm text-gray-600">Qty: {{ $item->quantity }}</small>
                         </div>
                         <div class="flex flex-col justify-between gap-2">

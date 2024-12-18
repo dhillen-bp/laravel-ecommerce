@@ -6,6 +6,8 @@ use App\Models\User;
 use Livewire\Attributes\Validate;
 use Livewire\Form;
 use Masmerise\Toaster\Toaster;
+use Illuminate\Auth\Events\Registered;
+use Illuminate\Support\Facades\Auth;
 
 class RegisterForm extends Form
 {
@@ -38,6 +40,10 @@ class RegisterForm extends Form
             'password' => bcrypt($this->password),
         ]);
         $user->assignRole('customer');
+
+        Auth::login($user);
+
+        event(new Registered($user));
 
         Toaster::success('Anda berhasil mendaftar akun!');
         $this->reset();

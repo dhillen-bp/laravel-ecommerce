@@ -51,7 +51,7 @@
                 <div class="flex items-start justify-between">
                     <div class="flex gap-3">
                         <div>
-                            <img src="{{ $selectedVariant->product->image ? Storage::url($selectedVariant->product->image) : asset('images/laravel.svg') }}"
+                            <img src="{{ $selectedVariant->product->image ? formatImageUrl($selectedVariant->product->image) : asset('images/laravel.svg') }}"
                                 class="w-16" alt="Product Image">
                         </div>
                         <div>
