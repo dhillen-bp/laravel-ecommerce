@@ -26,7 +26,7 @@ class RoleSeeder extends Seeder
             [
                 'name' => "Admin",
                 'email' => 'admin@olsop.com',
-                'password' => bcrypt('123')
+                'password' => bcrypt('123'),
             ],
         );
         $owner->assignRole($ownerRole);
@@ -35,7 +35,13 @@ class RoleSeeder extends Seeder
             [
                 'name' => "Pembeli",
                 'email' => 'pembeli@email.com',
-                'password' => bcrypt('123')
+                'password' => bcrypt('123'),
+                'province_id' => 5,
+                'city_id' => 39,
+                'address' => "Kota Gede, Yogyakarta",
+                'postal_code' => "57432",
+                'phone_number' => "081234567890",
+                'email_verified_at' => now(),
             ],
         );
         $customer->assignRole($customerRole);

@@ -11,7 +11,7 @@ class Home extends Component
 {
     public function render()
     {
-        $products = Product::with('category')
+        $products = Product::with('category', 'variants')
             ->where('is_active', 1)
             ->whereHas('variants', function ($query) {
                 $query->where('stock', '>', 1);

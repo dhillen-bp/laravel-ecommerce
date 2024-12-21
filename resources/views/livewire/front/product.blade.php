@@ -39,7 +39,7 @@
 
                         @livewire('components.button-buy-now', ['productVariantId' => $product->variants->first()->pivot->id], key('button-buy-now-' . $product->variants->first()->pivot->id))
                     </div>
-                    @livewire('front.cart.add-to-cart', ['productVariantId' => $product->variants->first()->pivot->id, 'stock' => $product->variants->first()->pivot->stock], key('add-to-cart-' . $product->id))
+                    @livewire('front.cart.add-to-cart', ['productVariantId' => $product->variants->first()->pivot->id, 'stock' => $product->variants->first()->pivot->stock], key('add-to-cart-' . $product->variants->first()->pivot->id))
                 </div>
             @endforeach
         </div>

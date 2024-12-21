@@ -30,41 +30,39 @@ class OrderResource extends Resource
     {
         return $form
             ->schema([
+                TextInput::make('id')->disabled(),
                 Group::make([
                     TextInput::make('name')->disabled()
                 ])
                     ->relationship('user'),
-                TextInput::make('price')->required()
-                    ->mask(RawJs::make('$money($input)'))
-                    ->stripCharacters(',')
-                    ->numeric(),
-                TextInput::make('phone_number')->required()
-                    ->numeric(),
-                Select::make('status')
-                    ->options([
-                        'paid' => 'Paid',
-                        'pending' => 'Pending',
-                        'failed' => 'Failed',
-                    ]),
-                Select::make('shipping_method')
-                    ->options([
-                        'standard' => 'Standard',
-                        'express' => 'Express',
-                    ])
-                    ->reactive()
-                    ->afterStateUpdated(function (callable $set, $state) {
-                        if ($state === 'express') {
-                            $set('shipping_cost', 20000);
-                        } else {
-                            $set('shipping_cost', 5000);
-                        }
-                    }),
-                TextInput::make('shipping_cost')->required()
+                TextInput::make('total_product_price')
                     ->mask(RawJs::make('$money($input)'))
                     ->stripCharacters(',')
                     ->numeric()->disabled(),
-                Textarea::make('shipping_address')
-                    ->autosize()
+                Group::make([
+                    TextInput::make('cost')
+                        ->mask(RawJs::make('$money($input)'))
+                        ->stripCharacters(',')
+                        ->numeric()->disabled()
+                ])->relationship('shipping'),
+                TextInput::make('total_price')
+                    ->mask(RawJs::make('$money($input)'))
+                    ->stripCharacters(',')
+                    ->numeric()->disabled(),
+                Select::make('status')
+                    ->options([
+                        'pending' => 'Pending (Menunggu)',
+                        'paid' => 'Paid (Dibayar)',
+                        'processed' => 'Processed (Diproses Pengemasan)',
+                        'shipped' => 'Shipped (Dikirim)',
+                        'delivered' => 'Delivered (Terkirim)',
+                        'completed' => 'Completed (Selesai)',
+                        'cancelled' => 'Cancelled (Dibatalkan)',
+                    ])->required(),
+                // TextInput::make('shipping_cost')->required()
+                //     ->mask(RawJs::make('$money($input)'))
+                //     ->stripCharacters(',')
+                //     ->numeric()->disabled(),
             ]);
     }
 
@@ -74,16 +72,22 @@ class OrderResource extends Resource
             ->columns([
                 TextColumn::make('id')->sortable(),
                 TextColumn::make('user.name')->label('User')->searchable()->sortable(),
-                TextColumn::make('phone_number')->sortable(),
-                TextColumn::make('price')
+                TextColumn::make('total_product_price')
                     ->money('IDR')->sortable(),
-                TextColumn::make('shipping_address')->words(3)->html(),
+                TextColumn::make('shipping.cost')->label('Shipping Cost')
+                    ->money('IDR')->sortable(),
+                TextColumn::make('total_price')
+                    ->money('IDR')->sortable(),
                 TextColumn::make('status')
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
-                        'paid' => 'success',
-                        'failed' => 'danger',
                         'pending' => 'warning',
+                        'paid' => 'primary-badge',
+                        'processed' => 'neutral',
+                        'shipped' => 'info',
+                        'delivered' => 'accent',
+                        'completed' => 'success',
+                        'cancelled' => 'danger',
                     }),
             ])
             ->filters([
@@ -102,7 +106,9 @@ class OrderResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            RelationManagers\ShippingRelationManager::class,
+            RelationManagers\OrderItemsRelationManager::class,
+            RelationManagers\PaymentRelationManager::class,
         ];
     }
 

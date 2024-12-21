@@ -27,9 +27,21 @@
             </div>
         @endforeach
 
-        <div class="mt-6">
-            <h3 class="text-xl font-semibold">Order Summary</h3>
-            <div class="mt-4 flex items-center justify-between">
+        <div class="">
+            <h3 class="mb-2 mt-6 text-xl font-semibold">Pengiriman</h3>
+            <div>
+                <p class="text-sm text-gray-600">Kurir Pengiriman: {{ $order->shipping->courier_name }}</p>
+                <p class="text-sm text-gray-600">Layanan Kurir:
+                    {{ $order->shipping->courier_service . ' (' . $order->shipping->estimate_day . 'hari)' }}
+                </p>
+                <p class="text-sm text-gray-600">Deskripsi Layanan: {{ $order->shipping->courier_service_description }}
+                </p>
+                <p class="text-sm text-gray-600">Alamat Pengiriman:
+                    {{ $order->shipping->address . ', Kota: ' . $order->shipping->city->name . ', Provinsi: ' . $order->shipping->province->name }}
+                </p>
+            </div>
+            <h3 class="mb-2 mt-6 text-xl font-semibold">Order Summary</h3>
+            <div class="flex items-start justify-between">
                 <div>
                     <p class="text-sm text-gray-600">Status: <livewire:components.order-status-badge
                             :status="$order->status" /></p>
@@ -39,10 +51,10 @@
                 </div>
                 <div class="flex flex-col items-end justify-end">
                     <p>Total item produk + Biaya Ongkir</p>
-                    <p>{{ number_format($order->price, 0, ',', '.') . ' + ' . number_format($order->shipping_cost, 0, ',', '.') }}
+                    <p>{{ number_format($order->total_product_price, 0, ',', '.') . ' + ' . number_format($order->shipping->cost, 0, ',', '.') }}
                     </p>
                     <p class="text-base font-semibold text-gray-600">Total: Rp
-                        {{ number_format($order->price + $order->shipping_cost, 0, ',', '.') }}</p>
+                        {{ number_format($order->total_price, 0, ',', '.') }}</p>
                 </div>
             </div>
         </div>

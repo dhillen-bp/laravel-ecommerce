@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignId('variant_id')->constrained()->onDelete('cascade');
             $table->unsignedBigInteger('price');
             $table->integer('stock')->default(0);
+            $table->integer('weight')->default(0);
             $table->timestamps();
         });
     }

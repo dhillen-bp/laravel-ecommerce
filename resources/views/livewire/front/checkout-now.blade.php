@@ -17,29 +17,67 @@
                         class="w-full rounded border border-gray-300 p-2" placeholder="Masukkan email" required>
                 </div>
                 <div>
-                    <label for="phone" class="block text-sm font-medium text-gray-700">Nomor Telepon</label>
-                    <input type="text" id="phone" wire:model='phone_number'
-                        class="w-full rounded border border-gray-300 p-2" placeholder="Masukkan nomor telepon" required>
-                </div>
-                <div>
-                    <label for="address" class="block text-sm font-medium text-gray-700">Alamat</label>
-                    <textarea id="address" wire:model='shipping_address' class="w-full rounded border border-gray-300 p-2"
-                        placeholder="Masukkan alamat pengiriman" rows="3" required></textarea>
-                </div>
-                <div>
-                    <label for="shipping_method" class="block text-sm font-medium text-gray-700">Metode
-                        Pengiriman</label>
-                    <select id="shipping_method" wire:model="shipping_method" wire:change="updateShippingCost"
+                    <label for="province" class="block text-sm font-medium text-gray-700">Provinsi</label>
+                    <select id="province" wire:model="province_id" wire:change="fetchCities"
                         class="w-full rounded border border-gray-300 p-2" required>
-                        <option value="standard">Pengiriman Standar</option>
-                        <option value="express">Pengiriman Ekspres</option>
+                        <option value="">Pilih Provinsi</option>
+                        @foreach ($provinces as $province)
+                            <option value="{{ $province->id }}">{{ $province->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div>
+                    <label for="city" class="block text-sm font-medium text-gray-700">Kota</label>
+                    <select id="city" wire:model="city_id" class="w-full rounded border border-gray-300 p-2"
+                        required>
+                        <option value="">Pilih Kota</option>
+                        @foreach ($cities as $city)
+                            <option value="{{ $city->id }}">{{ $city->name }}</option>
+                        @endforeach
                     </select>
                 </div>
                 <div>
-                    <label for="shipping_cost" class="block text-sm font-medium text-gray-700">Biaya Pengiriman</label>
-                    <input type="text" id="shipping_cost" wire:model="shipping_cost"
-                        class="w-full rounded border border-gray-300 p-2"
-                        value="{{ number_format($shipping_cost, 0, ',', '.') }}" readonly>
+                    <label for="address" class="block text-sm font-medium text-gray-700">Alamat</label>
+                    <textarea id="address" wire:model='address' class="w-full rounded border border-gray-300 p-2"
+                        placeholder="Masukkan alamat pengiriman" rows="3" required></textarea>
+                </div>
+                <div>
+                    <label for="courier_code" class="block text-sm font-medium text-gray-700">Kurir
+                        Pengiriman</label>
+                    <select id="courier_code" wire:model.live="courier_code"
+                        class="w-full rounded border border-gray-300 p-2" required>
+                        <option value="">Pilih Kurir</option>
+                        <option value="jne">JNE</option>
+                        <option value="tiki">TIKI</option>
+                        <option value="pos">POS</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="selectedCourierOption" class="block text-sm font-medium text-gray-700">Layanan
+                        Kurir</label>
+                    <div class="flex justify-between gap-3">
+                        <div>
+                            <select id="selectedCourierOption" wire:model.defer="selectedCourierOption"
+                                wire:change="fetchShippingCost" class="w-full rounded border border-gray-300 p-2"
+                                required>
+                                <option value="" disabled>-Pilih Layanan-</option>
+                                @foreach ($courierOptions as $index => $option)
+                                    <option value="{{ $index }}">
+                                        {{ $option['service'] }} -
+                                        Rp {{ number_format($option['cost'][0]['value'], 0, ',', '.') }}
+                                        ({{ $option['cost'][0]['etd'] ?? 'N/A' }} hari)
+                                    </option>
+                                @endforeach
+                            </select>
+                            <span class="text-sm text-slate-500">Tekan tombol Cek Ongkir untuk menampilkan pilihan
+                                kurir</span>
+                        </div>
+                        <button type="button" wire:click="fetchShippingCost"
+                            class="text-nowrap btn btn-primary rounded">
+                            Cek Ongkir
+                        </button>
+                    </div>
                 </div>
 
             </form>

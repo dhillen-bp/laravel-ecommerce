@@ -6,9 +6,13 @@
         <div class="space-y-4">
             <p><strong>Nama Lengkap:</strong> {{ $user->name }}</p>
             <p><strong>Email:</strong> {{ $user->email }}</p>
-            <p><strong>Alamat Pengiriman:</strong> {{ $order->shipping_address }}</p>
-            <p><strong>Jenis Pengiriman:</strong> {{ $order->shipping_method }}</p>
-            <p><strong>Biaya Pengiriman:</strong> {{ $order->shipping_cost }}</p>
+            <p><strong>Alamat Pengiriman:</strong>
+                {{ $order->shipping->address . ', Kota: ' . $order->shipping->city->name . ', Provinsi: ' . $order->shipping->province->name }}
+            </p>
+            <p><strong>Kurir Pengiriman:</strong> {{ $order->shipping->courier_name }}</p>
+            <p><strong>Layanan Kurir:</strong>
+                {{ $order->shipping->courier_service . ' (' . $order->shipping->estimate_day . 'hari)' }}</p>
+            <p><strong>Biaya Pengiriman:</strong> {{ $order->shipping->cost }}</p>
         </div>
 
         <div class="mt-6">
@@ -17,7 +21,8 @@
                 @foreach ($order->orderItems as $item)
                     <li>
                         <span><strong>{{ $item->productVariant->product->name }}
-                                ({{ $item->productVariant->variant->name }})</strong></span> -
+                                ({{ $item->productVariant->variant->name }})
+                            </strong></span> -
                         <span>{{ $item->quantity }} x Rp{{ number_format($item->price, 0, ',', '.') }}</span>
                     </li>
                 @endforeach
@@ -28,10 +33,10 @@
             <div class="flex items-center justify-between">
                 <span><strong>Total Pembayaran:</strong></span>
                 <div class="flex flex-col justify-end">
-                    <p>Rp {{ number_format($order->price, 0, ',', '.') }} + Rp
-                        {{ number_format($order->shipping_cost, 0, ',', '.') }}</p>
+                    <p>Rp {{ number_format($order->total_product_price, 0, ',', '.') }} + Rp
+                        {{ number_format($order->shipping->cost, 0, ',', '.') }}</p>
                     <p class="self-end font-semibold">Rp
-                        {{ number_format($order->price + $order->shipping_cost, 0, ',', '.') }}
+                        {{ number_format($order->price + $order->total_price, 0, ',', '.') }}
                     </p>
                 </div>
             </div>

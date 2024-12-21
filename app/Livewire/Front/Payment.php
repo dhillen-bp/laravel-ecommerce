@@ -21,8 +21,16 @@ class Payment extends Component
 
     public function mount($order_id)
     {
-        $this->order = Order::with('orderItems.productVariant.product', 'orderItems.productVariant.variant')->findOrFail($order_id);
+        $this->order = Order::with('orderItems.productVariant.product', 'orderItems.productVariant.variant', 'shipping')->findOrFail($order_id);
         $this->user = Auth::user();
+
+        if ($this->order->status === 'pending' && now()->greaterThan($this->order->expired_at)) {
+            $this->order->status = 'cancelled';
+            $this->order->save();
+
+            Toaster::error('Pesanan ini telah kedaluwarsa. Silakan buat pesanan baru.');
+            return $this->redirect(route('front.order'), navigate: true);
+        }
 
         if ($this->order->status !== 'pending') {
             Toaster::error('Pesanan ini tidak dapat diproses lebih lanjut.');

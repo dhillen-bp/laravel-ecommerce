@@ -26,7 +26,7 @@ class ProductSeeder extends Seeder
                 // 'price' => $faker->numberBetween(1000, 1000000),
                 // 'price' => $faker->randomElement([1000, 5000, 10000, 20000, 30000, 40000, 50000, 60000, 70000, 80000, 90000, 100000]),
                 // 'stock' => $faker->numberBetween(1, 100),
-                'image' => "https://via.placeholder.com/200x200.png?text=" . urlencode($productName),
+                // 'image' => "https://via.placeholder.com/200x200.png?text=" . urlencode($productName),
                 'is_active' => $faker->randomElement([1, 0]),
             ]);
         }

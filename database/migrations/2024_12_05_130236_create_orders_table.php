@@ -14,12 +14,14 @@ return new class extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->unsignedBigInteger('price');
-            $table->enum('status', ['pending', 'paid', 'failed'])->default('pending');
-            $table->string('shipping_address');
-            $table->string('shipping_method')->nullable();
-            $table->unsignedBigInteger('shipping_cost');
-            $table->string('phone_number');
+            $table->unsignedBigInteger('total_product_price');
+            $table->unsignedBigInteger('total_price');
+            $table->enum('status', ['pending', 'paid', 'processed', 'shipped', 'delivered', 'completed', 'cancelled'])->default('pending');
+            // $table->string('shipping_address');
+            // $table->string('shipping_method')->nullable();
+            // $table->unsignedBigInteger('shipping_cost');
+            // $table->string('phone_number');
+            $table->timestamp('expired_at')->nullable();
             $table->timestamps();
         });
     }

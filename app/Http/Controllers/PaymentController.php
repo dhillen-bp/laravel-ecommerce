@@ -163,7 +163,7 @@ class PaymentController extends Controller
                 Payment::create([
                     'order_id' => $orderId,
                     'transaction_id' => $transactionId,
-                    'status' => 'failed',
+                    'status' => 'cancelled',
                     'payment_type' => $type,
                     'transaction_time' => $transactionTime,
                     'bank' => $bank,
@@ -183,7 +183,7 @@ class PaymentController extends Controller
 
     public function paymentFailed(Order $order)
     {
-        $order->update(['status' => 'failed']);
+        $order->update(['status' => 'cancelled']);
     }
 
     public function paymentFailedMessage()

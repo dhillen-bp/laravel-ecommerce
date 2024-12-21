@@ -24,7 +24,11 @@ class User extends Authenticatable implements MustVerifyEmail
         'name',
         'email',
         'password',
-        'role'
+        'role',
+        'province_id',
+        'city_id',
+        'address',
+        'postal_code'
     ];
 
     /**
@@ -58,5 +62,15 @@ class User extends Authenticatable implements MustVerifyEmail
     public function cart()
     {
         return $this->hasOne(Cart::class);
+    }
+
+    public function province()
+    {
+        return $this->belongsTo(Province::class)->withDefault();
+    }
+
+    public function city()
+    {
+        return $this->belongsTo(City::class)->withDefault();
     }
 }

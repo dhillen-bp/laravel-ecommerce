@@ -1,10 +1,9 @@
 <div class="container mx-auto min-h-screen p-4">
-    <!-- Heading -->
+
     <h1 class="mb-6 mt-20 text-center text-3xl font-bold">Checkout</h1>
 
-    <!-- Checkout Form -->
     <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
-        <!-- Billing Details -->
+
         <div class="rounded-lg border p-4 shadow">
             <h2 class="mb-4 text-lg font-semibold">Detail Penagihan</h2>
             <form action="/checkout/confirm" method="POST" class="space-y-4">
@@ -19,31 +18,47 @@
                         class="w-full rounded border border-gray-300 p-2" placeholder="Masukkan email" required>
                 </div>
                 <div>
-                    <label for="phone" class="block text-sm font-medium text-gray-700">Nomor Telepon</label>
-                    <input type="text" id="phone" wire:model='phone_number'
-                        class="w-full rounded border border-gray-300 p-2" placeholder="Masukkan nomor telepon" required>
-                </div>
-                <div>
                     <label for="address" class="block text-sm font-medium text-gray-700">Alamat</label>
-                    <textarea id="address" wire:model='shipping_address' class="w-full rounded border border-gray-300 p-2"
+                    <textarea id="address" wire:model='address' class="w-full rounded border border-gray-300 p-2"
                         placeholder="Masukkan alamat pengiriman" rows="3" required></textarea>
                 </div>
                 <div>
-                    <label for="shipping_method" class="block text-sm font-medium text-gray-700">Metode
+                    <label for="courier_code" class="block text-sm font-medium text-gray-700">Kurir
                         Pengiriman</label>
-                    <select id="shipping_method" wire:model="shipping_method" wire:change="updateShippingCost"
+                    <select id="courier_code" wire:model.live="courier_code"
                         class="w-full rounded border border-gray-300 p-2" required>
-                        <option value="standard">Pengiriman Standar</option>
-                        <option value="express">Pengiriman Ekspres</option>
+                        <option value="">Pilih Kurir</option>
+                        <option value="jne">JNE</option>
+                        <option value="tiki">TIKI</option>
+                        <option value="pos">POS</option>
                     </select>
                 </div>
                 <div>
-                    <label for="shipping_cost" class="block text-sm font-medium text-gray-700">Biaya Pengiriman</label>
-                    <input type="text" id="shipping_cost" wire:model="shipping_cost"
-                        class="w-full rounded border border-gray-300 p-2"
-                        value="{{ number_format($shipping_cost, 0, ',', '.') }}" readonly>
+                    <label for="selectedCourierOption" class="block text-sm font-medium text-gray-700">Layanan
+                        Kurir</label>
+                    <div class="flex justify-between gap-3">
+                        <div>
+                            <select id="selectedCourierOption" wire:model.defer="selectedCourierOption"
+                                wire:change="fetchShippingCost" class="w-full rounded border border-gray-300 p-2"
+                                required>
+                                <option value="" disabled>-Pilih Layanan-</option>
+                                @foreach ($courierOptions as $index => $option)
+                                    <option value="{{ $index }}">
+                                        {{ $option['service'] }} -
+                                        Rp {{ number_format($option['cost'][0]['value'], 0, ',', '.') }}
+                                        ({{ $option['cost'][0]['etd'] ?? 'N/A' }} hari)
+                                    </option>
+                                @endforeach
+                            </select>
+                            <span class="text-sm text-slate-500">Tekan tombol Cek Ongkir untuk menampilkan pilihan
+                                kurir</span>
+                        </div>
+                        <button type="button" wire:click="fetchShippingCost"
+                            class="text-nowrap btn btn-primary rounded">
+                            Cek Ongkir
+                        </button>
+                    </div>
                 </div>
-
             </form>
         </div>
 

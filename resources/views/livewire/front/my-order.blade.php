@@ -8,8 +8,11 @@
                 <h2 class="text-xl font-semibold">Order Transaction:
                     {{ $order->payment ? $order->payment->transaction_id : 'Belum melakukan pembayaran' }}</h2>
                 <p class="text-sm text-gray-600">Tanggal: {{ $order->created_at }}</p>
-                <p class="text-sm text-gray-600">Jenis Pengiriman: {{ $order->shipping_method }}</p>
-                <p class="text-sm text-gray-600">Biaya Pengiriman: {{ $order->shipping_cost }}</p>
+                <p class="text-sm text-gray-600">Kurir Pengiriman: {{ $order->shipping->courier_name }}</p>
+                <p class="text-sm text-gray-600">Layanan Kurir:
+                    {{ $order->shipping->courier_service . ' (' . $order->shipping->estimate_day . 'hari)' }}
+                </p>
+                <p class="text-sm text-gray-600">Biaya Pengiriman: {{ $order->shipping->cost }}</p>
                 <div class="mt-2 space-y-2">
                     <p class="text-sm text-gray-600">Order Status: <livewire:components.order-status-badge
                             :status="$order->status" /></p>
@@ -37,7 +40,7 @@
                     <a href="{{ route('front.order_detail', $order->id) }}" wire:navigate
                         class="btn btn-accent btn-text">View</a>
                     <span class="text-lg font-semibold">Total: Rp
-                        {{ number_format($order->price + $order->shipping_cost, 0, ',', '.') }}</span>
+                        {{ number_format($order->total_price, 0, ',', '.') }}</span>
                 </div>
             </div>
         @endforeach
