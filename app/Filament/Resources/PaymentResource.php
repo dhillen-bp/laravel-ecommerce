@@ -32,9 +32,12 @@ class PaymentResource extends Resource
         return $form
             ->schema([
                 TextInput::make('order_id')->disabled(),
-                Group::make([
-                    TextInput::make('price')->disabled()
-                ])->relationship('order'),
+                TextInput::make('transaction_id')->disabled(),
+                TextInput::make('gross_amount')->disabled(),
+                TextInput::make('transaction_time')->disabled(),
+                TextInput::make('payment_type')->disabled(),
+                TextInput::make('bank')->disabled(),
+                TextInput::make('midtrans_status')->disabled(),
                 Select::make('status')
                     ->options([
                         'success' => 'Success',
@@ -50,6 +53,8 @@ class PaymentResource extends Resource
             ->columns([
                 TextColumn::make('order_id')->sortable(),
                 TextColumn::make('transaction_id')->sortable()->searchable(),
+                TextColumn::make('transaction_time')->sortable()->searchable(),
+                TextColumn::make('gross_amount')->money('IDR'),
                 TextColumn::make('status')
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
@@ -62,7 +67,8 @@ class PaymentResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                // Tables\Actions\EditAction::make(),
+                Tables\Actions\ViewAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -84,6 +90,7 @@ class PaymentResource extends Resource
             'index' => Pages\ListPayments::route('/'),
             'create' => Pages\CreatePayment::route('/create'),
             'edit' => Pages\EditPayment::route('/{record}/edit'),
+            'view' => Pages\ViewPayment::route('/{record}'),
         ];
     }
 }

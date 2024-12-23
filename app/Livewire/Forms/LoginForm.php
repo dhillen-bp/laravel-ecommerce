@@ -18,17 +18,16 @@ class LoginForm extends Form
     #[Validate('required|string')]
     public string $password = '';
 
-    public function authenticate()
-    {
-        $this->validate();
+    // public function authenticate()
+    // {
+    //     $this->validate();
 
-        if (Auth::attempt(['email' => $this->email, 'password' => $this->password])) {
-            session()->regenerate();
+    //     if (Auth::attempt(['email' => $this->email, 'password' => $this->password])) {
+    //         session()->regenerate();
 
-            Toaster::success('Anda berhasil login!');
-            return redirect()->route('front.index'); // Ganti dengan route dashboard atau halaman tujuan setelah login
-        }
+    //         Toaster::success('Anda berhasil login!');
+    //     }
 
-        Toaster::error('Anda gagal login!');
-    }
+    //     Toaster::error('Anda gagal login!');
+    // }
 }

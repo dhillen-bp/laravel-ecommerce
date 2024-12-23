@@ -33,13 +33,7 @@
             </a>
         </li>
         <li class="dropdown-footer gap-2">
-            <form action="{{ route('front.logout') }}" method="POST" class="w-full">
-                @csrf
-                <button type="submit" class="btn btn-error btn-soft btn-block">
-                    <span class="icon-[tabler--logout]"></span>
-                    Sign out
-                </button>
-            </form>
+            @livewire('auth.logout-button')
         </li>
     </ul>
 </div>

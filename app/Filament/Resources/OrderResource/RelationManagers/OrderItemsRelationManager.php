@@ -43,10 +43,6 @@ class OrderItemsRelationManager extends RelationManager
                                     ->label("Product Name")
                                     ->disabled(),
                             ]),
-                    ]),
-                Group::make()
-                    ->relationship('productVariant')
-                    ->schema([
                         Group::make()
                             ->relationship('variant')
                             ->schema([
@@ -54,7 +50,7 @@ class OrderItemsRelationManager extends RelationManager
                                     ->label("Variant Name")
                                     ->disabled(),
                             ]),
-                    ]),
+                    ])->columnSpanFull(),
                 TextInput::make('quantity')->disabled(),
                 TextInput::make('price')
                     ->mask(RawJs::make('$money($input)'))

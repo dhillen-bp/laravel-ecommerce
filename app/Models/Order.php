@@ -10,6 +10,9 @@ class Order extends Model
 {
     use HasFactory,  HasUuids;
 
+    // protected $fillable = ['user_id', 'price', 'status', 'shipping_address', 'shipping_method', 'shipping_cost', 'phone_number', 'midtrans_order_id', 'midtrans_status'];
+    protected $fillable = ['user_id', 'total_price', 'total_product_price', 'status'];
+
     protected static function boot()
     {
         parent::boot();
@@ -18,10 +21,6 @@ class Order extends Model
             $order->expired_at = now()->addMinutes(60);
         });
     }
-
-
-    // protected $fillable = ['user_id', 'price', 'status', 'shipping_address', 'shipping_method', 'shipping_cost', 'phone_number', 'midtrans_order_id', 'midtrans_status'];
-    protected $fillable = ['user_id', 'total_price', 'total_product_price', 'status', 'midtrans_order_id', 'midtrans_status'];
 
     public function user()
     {

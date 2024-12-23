@@ -8,29 +8,47 @@
             </div>
 
             <div class="flex flex-row items-center justify-center gap-3 md:hidden">
-                <!-- Tombol Reservasi di Mobile -->
-                <div class="w-full text-center">
-                    <button class="btn btn-success btn-outline btn-sm">
-                        <span class="text-btn-success">Reservasi</span>
-                    </button>
-                </div>
+
+                @auth()
+                    @if (auth()->user()->hasRole('customer'))
+                        <div class="navbar-end flex justify-end gap-x-2">
+                            @livewire('front.cart.nav-cart')
+
+                            @livewire('components.nav-profile')
+                        </div>
+                    @else
+                        <a href="{{ route('front.login') }}" class="btn btn-success btn-outline" wire:navigate>
+                            Login
+                        </a>
+                    @endif
+                @endauth
+
+                @guest
+                    <a href="{{ route('front.login') }}" wire:navigate class="btn btn-success btn-outline btn-sm">
+                        <span class="text-btn-success">Login</span>
+                    </a>
+                @endguest
 
                 <!-- Hamburger Icon for Mobile -->
-                <button type="button" class="btn btn-square btn-secondary btn-outline collapse-toggle btn-sm"
+                <button type="button" class="collapse-toggle btn btn-square btn-secondary btn-outline btn-sm"
                     data-collapse="#dropdown-navbar-collapse" aria-controls="dropdown-navbar-collapse"
                     aria-label="Toggle navigation">
                     <span class="size-4 icon-[tabler--menu-2] collapse-open:hidden"></span>
                     <span class="size-4 icon-[tabler--x] hidden collapse-open:block"></span>
                 </button>
-
             </div>
+
+
+
         </div>
+    </div>
     </div>
 
     <!-- Dropdown Menu untuk Mobile -->
     <div id="dropdown-navbar-collapse"
         class="collapse hidden grow basis-full overflow-hidden transition-[height] duration-300 md:navbar-start max-md:w-full md:justify-center">
-        <ul class="menu p-0 text-center text-base md:menu-horizontal md:mr-3 md:gap-8">
+        <ul
+            class="menu my-2 space-y-2 p-0 text-start text-base md:menu-horizontal md:mr-3 md:gap-8 md:space-y-0 md:text-center">
             <a href="{{ route('front.index') }}" class="nav-item group" wire:navigate>
                 <li class="{{ request()->routeIs('front.index') ? 'font-bold' : '' }} group-hover:font-bold">
                     Beranda</li>

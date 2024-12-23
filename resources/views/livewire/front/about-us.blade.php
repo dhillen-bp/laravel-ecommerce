@@ -1,5 +1,4 @@
 <div class="px-6 py-8 md:px-16">
-
     <section class="mb-10 mt-20 text-center">
         <h1 class="text-3xl font-bold">Tentang Kami</h1>
         <p class="mt-2 text-gray-500">Kenali lebih dekat tentang kami dan misi kami untuk melayani Anda.</p>

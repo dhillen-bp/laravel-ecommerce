@@ -17,6 +17,7 @@
 **Fitur Owner**
 - Manajemen data Kategori
 - Manajemen data Produk
+- Manajemen data Pesananan
 
 # TECH STACK
 - Laravel 11

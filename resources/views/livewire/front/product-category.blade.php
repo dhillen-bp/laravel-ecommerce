@@ -8,6 +8,15 @@
         <input wire:model.live.debounce.300ms="search" type="text"
             class="mt-2 w-full rounded-full border border-slate-500 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
             placeholder="Cari Produk..." aria-label="input" />
+
+        <div class="mb-4 mt-4 flex items-center justify-start gap-4">
+            <label for="sortPrice">Filter by price</label>
+            <select wire:model.live="sortPrice" id="sortPrice" class="rounded-full border border-primary px-3 py-2">
+                <option value="" selected disabled>Urutkan Berdasarkan</option>
+                <option value="low_to_high">Harga Terendah</option>
+                <option value="high_to_low">Harga Tertinggi</option>
+            </select>
+        </div>
     </section>
 
     <section>

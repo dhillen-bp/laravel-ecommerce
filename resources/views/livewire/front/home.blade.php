@@ -9,7 +9,9 @@
                             <div class="absolute inset-0 bg-black opacity-80"></div>
                             <div class="absolute space-y-3 text-center">
                                 <h2 class="text-3xl font-bold text-primary md:text-6xl">Selamat Datang</h2>
-                                <p class="-mt-2 text-lg text-primary md:text-xl">Lihat dan kunjungi berbagai produk
+                                <p class="-mt-2 max-w-sm text-lg text-primary md:max-w-4xl md:text-xl">Lihat dan
+                                    kunjungi
+                                    berbagai produk
                                     menarik
                                     pada toko
                                     kami.</p>
@@ -25,7 +27,10 @@
                         <div class="flex h-full items-center justify-center">
                             <div class="absolute space-y-3 text-center">
                                 <h2 class="text-3xl font-bold text-primary md:text-6xl">Tentang Kami</h2>
-                                <p class="-mt-2 text-lg text-primary md:text-xl">Ingin tahu tentang toko kami? Dan cari
+                                <p class="-mt-2 max-w-sm text-lg text-primary md:max-w-4xl md:text-xl">Ingin tahu
+                                    tentang
+                                    toko kami?
+                                    Dan cari
                                     tahu layanan apa saja yang kami berikan.</p>
                                 <a href="{{ route('front.about') }}" wire:navigate class="btn btn-primary mt-3">
                                     Lihat Tentang Kami
@@ -39,7 +44,8 @@
                         <div class="flex h-full items-center justify-center">
                             <div class="absolute space-y-3 text-center">
                                 <h2 class="text-3xl font-bold text-primary md:text-6xl">Laravel Olsop</h2>
-                                <p class="-mt-2 text-lg text-primary md:text-xl">Laravel Olsop adalah ecommerce dengan
+                                <p class="-mt-2 max-w-sm text-lg text-primary md:max-w-4xl md:text-xl">Laravel Olsop
+                                    adalah ecommerce dengan
                                     produk tersedia dari berbagai kebutuhan pengguna.</p>
                             </div>
                             <img src="{{ asset('images/hero-banner-3.svg') }}"
@@ -68,7 +74,7 @@
         </div>
     </section>
 
-    <section class="mt-10 md:px-16">
+    <section class="mt-10 px-6 md:px-16">
         @livewire('components.list-category')
 
         <h1 class="mb-6 text-center text-3xl font-bold">Produk Terbaru</h1>
@@ -101,7 +107,7 @@
         </div>
     </section>
 
-    <section class="mt-12 bg-gray-50 py-12 md:px-16">
+    <section class="mt-12 bg-gray-50 px-6 py-12 md:px-16">
         <h1 class="mb-6 text-center text-3xl font-bold">Layanan yang Kami Berikan</h1>
         <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3">
             <!-- Layanan 1 -->
