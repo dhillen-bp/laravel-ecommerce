@@ -4,6 +4,7 @@ namespace App\Livewire\Front;
 
 use App\Models\CartItem;
 use App\Models\City;
+use App\Models\Discount;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Province;
@@ -23,8 +24,9 @@ class Checkout extends Component
     #[Validate]
 
     public $cartItems;
-    public $totalPrice = 0;
+    public $totalOrderPrice = 0;
     public $totalProductPrice = 0;
+    public $originalTotalProductPrice;
     public $totalWeight;
     public $user;
     public $name;
@@ -47,6 +49,13 @@ class Checkout extends Component
     public $origin_city_id = 501;
     public $courierOptions = [];
     public $selectedCourierOption = 0;
+
+    public $voucher = [
+        'code' => '',
+        'percentage' => 0,
+        'amount' => 0,
+        'error' => null,
+    ];
 
     protected function rules()
     {
@@ -78,20 +87,20 @@ class Checkout extends Component
         }
 
         $this->cartItems = CartItem::whereIn('id', $selectedItems)
-            ->with('productVariant.product', 'productVariant.variant')
+            ->with('product_variant.product', 'product_variant.variant')
             ->get();
 
         $this->totalWeight = $this->cartItems->sum(function ($item) {
-            return $item->productVariant->weight * $item->quantity;
+            return $item->product_variant->weight * $item->quantity;
         });
 
         $this->totalProductPrice = $this->cartItems->sum(function ($item) {
-            return $item->productVariant->price * $item->quantity;
+            return $item->product_variant->price * $item->quantity;
         });
 
         $this->totalProductPrice = $this->totalProductPrice;
 
-        $this->totalPrice = $this->totalProductPrice;
+        $this->totalOrderPrice = $this->totalProductPrice;
 
         // $this->updateShippingCost();
     }
@@ -132,7 +141,7 @@ class Checkout extends Component
                     Toaster::error('Tidak ada biaya pengiriman tersedia untuk opsi ini.');
                 }
 
-                $this->totalPrice = $this->totalProductPrice + $this->shipping_cost;
+                $this->totalOrderPrice = $this->totalProductPrice + $this->shipping_cost;
             } catch (\Exception $e) {
                 Toaster::error('Terjadi kesalahan saat mengambil biaya pengiriman.');
                 $this->shipping_cost = 0; // Set biaya ke 0 jika terjadi kesalahan
@@ -143,6 +152,54 @@ class Checkout extends Component
         }
     }
 
+    public function applyVoucher()
+    {
+        $this->voucher['error'] = null; // Reset error
+        $voucher = Discount::where('code', $this->voucher['code'])->first();
+        $originalTotalProductPrice = $this->totalProductPrice;
+
+        if (!$voucher || $voucher->start_date > now()) {
+            $this->voucher['error'] = 'Kode voucher tidak valid.';
+            $this->voucher['code'] = null;
+            return;
+        }
+
+        if ($this->voucher['amount'] > 0) {
+            // $this->voucher['error'] = 'Voucher sudah diterapkan.';
+            Toaster::error('Voucher sudah diterapkan!');
+            $this->voucher['code'] = null;
+            return;
+        }
+
+        if ($voucher->end_date < now()) {
+            $this->voucher['error'] = 'Kode voucher sudah kadaluarsa.';
+            $this->voucher['code'] = null;
+            return;
+        }
+
+        $userId = Auth::id();
+        $usedCount = Order::where('user_id', $userId)
+            ->where('discount_code', $this->voucher['code'])
+            ->count();
+
+        if ($usedCount >= 1) {
+            $this->voucher['error'] = 'Anda sudah menggunakan kode voucher ini.';
+            $this->voucher['code'] = null;
+            return;
+        }
+
+        if ($voucher->type === 'fixed') {
+            $this->voucher['amount'] = $voucher->amount;
+            $this->totalProductPrice = max(0, $this->totalProductPrice - $this->voucher['amount']);
+        } else {
+            $this->voucher['percentage'] = $voucher->percentage;
+            $this->voucher['amount'] = ($this->voucher['percentage'] / 100)  *  $this->totalProductPrice;
+            $this->totalProductPrice = max(0, $this->totalProductPrice - $this->voucher['amount']);
+        }
+
+        $this->totalOrderPrice = $this->totalProductPrice + $this->shipping_cost;
+    }
+
     public function submitOrder()
     {
         DB::beginTransaction();
@@ -151,24 +208,26 @@ class Checkout extends Component
 
             $order = Order::create([
                 'user_id' => Auth::id(),
+                'discount_code' => $this->voucher['code'],
+                'discount_amount' => $this->voucher['amount'],
                 'total_product_price' => $this->totalProductPrice,
-                'total_price' => $this->totalProductPrice + $this->shipping_cost,
+                'total_order_price' => $this->totalOrderPrice,
             ]);
 
             foreach ($this->cartItems as $item) {
-                $productVariant = $item->productVariant()->lockForUpdate()->first();
+                $product_variant = $item->product_variant()->lockForUpdate()->first();
 
-                if ($productVariant->stock < $item->quantity) {
+                if ($product_variant->stock < $item->quantity) {
                     DB::rollBack();
-                    Toaster::error("Stok produk '{$productVariant->product->name}' tidak cukup.");
+                    Toaster::error("Stok produk '{$product_variant->product->name}' tidak cukup.");
                     return;
                 }
 
                 OrderItem::create([
                     'order_id' => $order->id,
-                    'product_variant_id' => $productVariant->id,
+                    'product_variant_id' => $product_variant->id,
                     'quantity' => $item->quantity,
-                    'price' => $productVariant->price,
+                    'price' => $product_variant->price,
                 ]);
             }
 
@@ -184,6 +243,20 @@ class Checkout extends Component
                 'courier_service_description' => $this->courier_service_description,
                 'estimate_day' => $this->estimate_day,
             ]);
+
+            if (!empty($this->voucher['code'])) {
+                $discount = Discount::where('code', $this->voucher['code'])->first();
+                if ($discount) {
+
+                    if ($discount->claimed < $discount->claim_limit) {
+                        $discount->increment('claimed');
+                    } else {
+                        Toaster::error('Kode voucher sudah mencapai batas klaim.');
+                        DB::rollBack();
+                        return;
+                    }
+                }
+            }
 
             $cart = $this->user->cart;
             if ($cart) {

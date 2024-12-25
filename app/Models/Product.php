@@ -18,7 +18,7 @@ class Product extends Model
         $this->attributes['slug'] = Str::slug($value);
     }
 
-    public function orderItems()
+    public function order_items()
     {
         return $this->hasMany(OrderItem::class);
     }

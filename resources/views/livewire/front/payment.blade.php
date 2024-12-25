@@ -3,9 +3,9 @@
         <div class="flex items-center space-x-4">
             <div class="flex items-center">
                 <div class="flex h-10 w-10 items-center justify-center rounded-full bg-success text-gray-50">
-                    <span class="size-4 icon-[tabler--check]"></span>
+                    <span class="icon-[tabler--check] size-4"></span>
                 </div>
-                <span class="ml-2 text-sm font-medium text-gray-400">Checkout Order</span>
+                <span class="ml-2 text-sm font-medium text-success text-opacity-65">Checkout Order</span>
             </div>
 
             <div class="h-1 w-20 bg-gray-300"></div>
@@ -33,18 +33,18 @@
             <p><strong>Kurir Pengiriman:</strong> {{ $order->shipping->courier_name }}</p>
             <p><strong>Layanan Kurir:</strong>
                 {{ $order->shipping->courier_service . ' (' . $order->shipping->estimate_day . 'hari)' }}</p>
-            <p><strong>Biaya Pengiriman:</strong> {{ $order->shipping->cost }}</p>
+            <p><strong>Biaya Pengiriman:</strong> Rp {{ number_format($order->shipping->cost, 0, ',', '.') }}</p>
         </div>
 
         <div class="mt-6">
             <h2 class="mb-4 text-lg font-semibold">Produk yang Dibeli</h2>
             <ul class="list-disc space-y-2 pl-6">
-                @foreach ($order->orderItems as $item)
+                @foreach ($order->order_items as $item)
                     <li>
-                        <span><strong>{{ $item->productVariant->product->name }}
-                                ({{ $item->productVariant->variant->name }})
+                        <span><strong>{{ $item->product_variant->product->name }}
+                                ({{ $item->product_variant->variant->name }})
                             </strong></span> -
-                        <span>{{ $item->quantity }} x Rp{{ number_format($item->price, 0, ',', '.') }}</span>
+                        <span>{{ $item->quantity }} x Rp {{ number_format($item->price, 0, ',', '.') }}</span>
                     </li>
                 @endforeach
             </ul>
@@ -52,12 +52,26 @@
 
         <div class="mt-6">
             <div class="flex items-center justify-between">
-                <span><strong>Total Pembayaran:</strong></span>
+                <div>
+                    @if (!empty($order->discount_code))
+                        <p>Total Harga Produk (sebelum diskon):</p>
+                        <p>Total Harga Produk (setelah diskon):</p>
+                    @endif
+                    <p>Total Harga Produk + Ongkos Kirim:</p>
+                    <p><strong>Total Pembayaran:</strong></p>
+                </div>
                 <div class="flex flex-col justify-end">
-                    <p>Rp {{ number_format($order->total_product_price, 0, ',', '.') }} + Rp
+                    @if (!empty($order->discount_code))
+                        <p class="self-end line-through">Rp
+                            {{ number_format($order->total_product_price + $order->discount_amount, 0, ',', '.') }}
+                        </p>
+                        <p class="self-end">Rp {{ number_format($order->total_product_price, 0, ',', '.') }}
+                        </p>
+                    @endif
+                    <p class="self-end">Rp {{ number_format($order->total_product_price, 0, ',', '.') }} + Rp
                         {{ number_format($order->shipping->cost, 0, ',', '.') }}</p>
                     <p class="self-end font-semibold">Rp
-                        {{ number_format($order->price + $order->total_price, 0, ',', '.') }}
+                        {{ number_format($order->price + $order->total_order_price, 0, ',', '.') }}
                     </p>
                 </div>
             </div>

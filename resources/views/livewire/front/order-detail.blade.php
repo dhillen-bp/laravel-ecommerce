@@ -5,19 +5,19 @@
     <div class="rounded-lg border bg-white p-4 shadow-md">
         <h2 class="text-xl font-semibold">Products</h2>
 
-        @foreach ($order->orderItems as $orderItem)
+        @foreach ($order->order_items as $orderItem)
             <div class="mt-4 space-y-4">
                 <div class="flex items-center justify-between">
                     <div class="flex items-center">
-                        <img src="{{ $orderItem->productVariant->product->image ? Storage::url($orderItem->productVariant->product->image) : asset('images/laravel.svg') }}"
+                        <img src="{{ $orderItem->product_variant->product->image ? Storage::url($orderItem->product_variant->product->image) : asset('images/laravel.svg') }}"
                             alt="Product Image" class="mr-4 h-12 w-12 object-cover">
                         <div>
-                            <span class="font-medium text-gray-700">{{ $orderItem->productVariant->product->name }} -
-                                {{ $orderItem->productVariant->variant->name }}</span>
+                            <span class="font-medium text-gray-700">{{ $orderItem->product_variant->product->name }} -
+                                {{ $orderItem->product_variant->variant->name }}</span>
                             <div class="flex flex-col">
                                 <span class="text-sm text-gray-600">Quantity: {{ $orderItem->quantity }}</span>
                                 <span class="text-sm text-gray-600">Harga satuan: Rp
-                                    {{ number_format($orderItem->productVariant->price, 0, ',', '.') }}</span>
+                                    {{ number_format($orderItem->product_variant->price, 0, ',', '.') }}</span>
                             </div>
                         </div>
                     </div>
@@ -54,7 +54,7 @@
                     <p>{{ number_format($order->total_product_price, 0, ',', '.') . ' + ' . number_format($order->shipping->cost, 0, ',', '.') }}
                     </p>
                     <p class="text-base font-semibold text-gray-600">Total: Rp
-                        {{ number_format($order->total_price, 0, ',', '.') }}</p>
+                        {{ number_format($order->total_order_price, 0, ',', '.') }}</p>
                 </div>
             </div>
         </div>

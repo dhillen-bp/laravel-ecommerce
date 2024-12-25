@@ -23,6 +23,7 @@ class OrderItemResource extends Resource
 {
     protected static ?string $model = OrderItem::class;
 
+    protected static ?string $navigationGroup = 'Order & Payment';
     protected static ?string $navigationIcon = 'heroicon-o-clipboard-document';
     protected static ?int $navigationSort = 3;
 
@@ -32,7 +33,7 @@ class OrderItemResource extends Resource
             ->schema([
                 TextInput::make('order_id')->disabled()->columnSpanFull(),
                 Group::make()
-                    ->relationship('productVariant')
+                    ->relationship('product_variant')
                     ->schema([
                         Group::make()
                             ->relationship('product')
@@ -56,7 +57,7 @@ class OrderItemResource extends Resource
                     ->stripCharacters(',')
                     ->numeric()->disabled(),
                 Group::make()
-                    ->relationship('productVariant')
+                    ->relationship('product_variant')
                     ->schema([
                         Group::make()
                             ->relationship('product')
@@ -72,9 +73,9 @@ class OrderItemResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('order_id')->sortable(),
-                ImageColumn::make('productVariant.variant.image')->size(60),
-                TextColumn::make('productVariant.product.name')->label("Product Name")->searchable()->sortable(),
-                TextColumn::make('productVariant.variant.name')->label("Variant Name")->searchable()->sortable(),
+                ImageColumn::make('product_variant.variant.image')->size(60),
+                TextColumn::make('product_variant.product.name')->label("Product Name")->searchable()->sortable(),
+                TextColumn::make('product_variant.variant.name')->label("Variant Name")->searchable()->sortable(),
                 TextColumn::make('quantity')->sortable(),
                 TextColumn::make('price')
                     ->money('IDR')->sortable(),

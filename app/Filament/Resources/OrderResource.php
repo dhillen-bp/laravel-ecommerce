@@ -15,6 +15,7 @@ use Filament\Resources\Resource;
 use Filament\Support\RawJs;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -23,8 +24,14 @@ class OrderResource extends Resource
 {
     protected static ?string $model = Order::class;
 
+    protected static ?string $navigationGroup = 'Order & Payment';
     protected static ?string $navigationIcon = 'heroicon-o-document';
     protected static ?int $navigationSort = 2;
+
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::where('status', 'paid')->count();
+    }
 
     public static function form(Form $form): Form
     {
@@ -45,7 +52,7 @@ class OrderResource extends Resource
                         ->stripCharacters(',')
                         ->numeric()->disabled()
                 ])->relationship('shipping'),
-                TextInput::make('total_price')
+                TextInput::make('total_order_price')
                     ->mask(RawJs::make('$money($input)'))
                     ->stripCharacters(',')
                     ->numeric()->disabled(),
@@ -76,7 +83,7 @@ class OrderResource extends Resource
                     ->money('IDR')->sortable(),
                 TextColumn::make('shipping.cost')->label('Shipping Cost')
                     ->money('IDR')->sortable(),
-                TextColumn::make('total_price')
+                TextColumn::make('total_order_price')
                     ->money('IDR')->sortable(),
                 TextColumn::make('status')
                     ->badge()
@@ -91,10 +98,19 @@ class OrderResource extends Resource
                     }),
             ])
             ->filters([
-                //
+                SelectFilter::make('status')
+                    ->options([
+                        'pending' => 'Pending',
+                        'paid' => 'Paid',
+                        'processed' => 'Processed',
+                        'shipped' => 'Shipped',
+                        'delivered' => 'Delivered',
+                        'completed' => 'Completed',
+                        'cancelled' => 'Cancelled',
+                    ])
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()->color('warning'),
                 // Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([

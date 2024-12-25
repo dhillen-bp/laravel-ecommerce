@@ -11,7 +11,7 @@ class Order extends Model
     use HasFactory,  HasUuids;
 
     // protected $fillable = ['user_id', 'price', 'status', 'shipping_address', 'shipping_method', 'shipping_cost', 'phone_number', 'midtrans_order_id', 'midtrans_status'];
-    protected $fillable = ['user_id', 'total_price', 'total_product_price', 'status'];
+    protected $fillable = ['user_id', 'total_order_price', 'total_product_price', 'status', 'discount_code', 'discount_amount'];
 
     protected static function boot()
     {
@@ -27,7 +27,7 @@ class Order extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function orderItems()
+    public function order_items()
     {
         return $this->hasMany(OrderItem::class);
     }
@@ -40,5 +40,10 @@ class Order extends Model
     public function shipping()
     {
         return $this->hasOne(Shipping::class);
+    }
+
+    public function discount()
+    {
+        return $this->belongsTo(Discount::class, 'discount_code', 'code');
     }
 }

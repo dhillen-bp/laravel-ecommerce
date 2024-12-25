@@ -90,11 +90,12 @@
                                     </option>
                                 @endforeach
                             </select>
-                            <span class="text-sm text-slate-500">Tekan tombol Cek Ongkir untuk menampilkan pilihan
+                            <span class="text-sm text-slate-500">Pilih Kurir & Tekan tombol Cek Ongkir untuk
+                                menampilkan pilihan
                                 kurir</span>
                         </div>
                         <button type="button" wire:click="fetchShippingCost"
-                            class="text-nowrap btn btn-primary rounded">
+                            class="btn btn-primary text-nowrap rounded">
                             Cek Ongkir
                         </button>
                     </div>
@@ -103,45 +104,79 @@
             </form>
         </div>
 
-        <div class="rounded-lg border p-4 shadow">
-            <h2 class="mb-4 text-lg font-semibold">Ringkasan Pesanan</h2>
-            <div class="space-y-4">
-                <div class="flex items-start justify-between">
-                    <div class="flex gap-3">
-                        <div>
-                            <img src="{{ $selectedVariant->product->image ? formatImageUrl($selectedVariant->product->image) : asset('images/laravel.svg') }}"
-                                class="w-16" alt="Product Image">
-                        </div>
-                        <div>
-                            <p class="font-medium">{{ $selectedVariant->product->name }} -
-                                {{ $selectedVariant->variant->name }}
-                            </p>
-                            <p class="text-sm text-gray-500">Qty: 1</p>
-                            <p class="text-sm text-gray-500">Harga Satuan: Rp
-                                {{ number_format($selectedVariant->price, 0, ',', '.') }}</p>
-                        </div>
-                    </div>
-                    <div>
-                        <p class="font-semibold">Subtotal</p>
-                        <p class="font-medium">Rp
-                            {{ number_format($selectedVariant->price * 1, 0, ',', '.') }}</p>
-                    </div>
+        <div class="space-y-3 md:space-y-5">
+            <div class="rounded-lg border p-4 shadow">
+                <h2 class="mb-4 text-lg font-semibold">Kode Voucher</h2>
+                <div class="flex items-center space-x-4">
+                    <form class="flex w-full gap-x-5">
+                        <input type="text" wire:model.defer="voucher.code" placeholder="Masukkan kode voucher"
+                            class="w-full rounded border border-gray-300 pl-2" />
+                        <button type="button" wire:click="applyVoucher" class="btn btn-primary rounded">
+                            Terapkan
+                        </button>
+                    </form>
                 </div>
+                @if ($voucher['error'])
+                    <p class="mt-2 text-sm text-error">{{ $voucher['error'] }}</p>
+                @endif
+                @if ($voucher['amount'] > 0)
+                    <p class="mt-2 text-sm text-green-500">Anda mendapatkan diskon: Rp
+                        {{ number_format($voucher['amount'], 0, ',', '.') }}</p>
+                @endif
+            </div>
 
-                <div class="h-px bg-gray-300"></div>
-
-                <div>
-                    <div class="flex justify-between text-sm text-slate-500">
-                        <span>Total harga produk + Biaya kirim: </span>
-                        <span>
-                            <span>Rp {{ number_format($totalProductPrice, 0, ',', '.') }}</span>
-                            <span>+</span>
-                            <span>Rp {{ number_format($shipping_cost, 0, ',', '.') }}</span>
-                        </span>
+            <div class="rounded-lg border p-4 shadow">
+                <h2 class="mb-4 text-lg font-semibold">Ringkasan Pesanan</h2>
+                <div class="space-y-4">
+                    <div class="flex items-start justify-between">
+                        <div class="flex gap-3">
+                            <div>
+                                <img src="{{ $selectedVariant->product->image ? formatImageUrl($selectedVariant->product->image) : asset('images/laravel.svg') }}"
+                                    class="w-16" alt="Product Image">
+                            </div>
+                            <div>
+                                <p class="font-medium">{{ $selectedVariant->product->name }} -
+                                    {{ $selectedVariant->variant->name }}
+                                </p>
+                                <p class="text-sm text-gray-500">Qty: 1</p>
+                                <p class="text-sm text-gray-500">Harga Satuan: Rp
+                                    {{ number_format($selectedVariant->price, 0, ',', '.') }}</p>
+                            </div>
+                        </div>
+                        <div>
+                            <p class="font-semibold">Subtotal</p>
+                            <p class="font-medium">Rp
+                                {{ number_format($selectedVariant->price * 1, 0, ',', '.') }}</p>
+                        </div>
                     </div>
-                    <div class="flex justify-between font-bold">
-                        <span>Total</span>
-                        <span>Rp {{ number_format($totalPrice, 0, ',', '.') }}</span>
+
+                    <div class="h-px bg-gray-300"></div>
+
+                    <div>
+                        @if (!empty($voucher['code'] && $voucher['amount']))
+                            <div class="flex justify-between text-sm text-slate-500">
+                                <span>Total harga produk (Sebelum Diskon): </span>
+                                <span>Rp
+                                    {{ number_format($totalProductPrice + ($voucher['amount'] ?? 0), 0, ',', '.') }}</span>
+                            </div>
+                            <div class="flex justify-between text-sm text-slate-500">
+                                <span>Total harga produk (Setelah Diskon): </span>
+                                <span class="line-through">Rp
+                                    {{ number_format($totalProductPrice, 0, ',', '.') }}</span>
+                            </div>
+                        @endif
+                        <div class="flex justify-between text-sm text-slate-500">
+                            <span>Total harga produk + Ongkos kirim: </span>
+                            <span>
+                                <span>Rp {{ number_format($totalProductPrice, 0, ',', '.') }}</span>
+                                <span>+</span>
+                                <span>Rp {{ number_format($shipping_cost, 0, ',', '.') }}</span>
+                            </span>
+                        </div>
+                        <div class="flex justify-between font-bold">
+                            <span>Total</span>
+                            <span>Rp {{ number_format($totalOrderPrice, 0, ',', '.') }}</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -149,8 +184,9 @@
     </div>
 
     <div class="mt-6 text-center">
-        <button wire:click="submitOrder" class="w-full rounded-lg bg-green-500 px-6 py-2 text-white hover:bg-green-600">
-            Lanjutkan Bayar Sekarang
+        <button wire:click="submitOrder" @if (empty($courier_code) && empty($courierOptions) && empty($selectedCourierOption)) disabled @endif
+            class="@if (empty($courier_code) && empty($courierOptions) && empty($selectedCourierOption)) disabled @endif btn btn-primary w-full rounded-full">
+            Lakukan Checkout
         </button>
     </div>
 </div>

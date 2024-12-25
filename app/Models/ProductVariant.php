@@ -22,7 +22,7 @@ class ProductVariant extends Model
         return $this->belongsTo(Variant::class);
     }
 
-    public function cartItems()
+    public function cart_items()
     {
         return $this->hasMany(CartItem::class);
     }

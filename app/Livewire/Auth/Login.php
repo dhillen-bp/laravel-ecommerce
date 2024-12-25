@@ -15,11 +15,13 @@ class Login extends Component
 
     public function mount()
     {
-        if (auth()->check()) {
+        if (auth()->check() && Auth::user()->roles->pluck('name')->first() === 'customer') {
             Toaster::warning("Anda sudah login!");
             // Redirect user to the dashboard if they are already logged in
             return $this->redirect(route('front.my_profile'), navigate: true);
         }
+
+        // dd(Auth::user()->getRoleNames()->first() == 'customer');
     }
 
     public function login()

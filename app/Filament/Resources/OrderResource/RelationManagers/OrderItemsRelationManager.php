@@ -18,14 +18,14 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class OrderItemsRelationManager extends RelationManager
 {
-    protected static string $relationship = 'orderItems';
+    protected static string $relationship = 'order_items';
 
     public function form(Form $form): Form
     {
         return $form
             ->schema([
                 Group::make()
-                    ->relationship('productVariant')
+                    ->relationship('product_variant')
                     ->schema([
                         Group::make()
                             ->relationship('product')
@@ -34,7 +34,7 @@ class OrderItemsRelationManager extends RelationManager
                             ]),
                     ])->columnSpanFull(),
                 Group::make()
-                    ->relationship('productVariant')
+                    ->relationship('product_variant')
                     ->schema([
                         Group::make()
                             ->relationship('product')
@@ -64,9 +64,9 @@ class OrderItemsRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('name')
             ->columns([
-                // ImageColumn::make('productVariant.variant.image')->label("Image"),
-                TextColumn::make('productVariant.product.name'),
-                TextColumn::make('productVariant.variant.name'),
+                // ImageColumn::make('product_variant.variant.image')->label("Image"),
+                TextColumn::make('product_variant.product.name'),
+                TextColumn::make('product_variant.variant.name'),
                 TextColumn::make('quantity'),
                 TextColumn::make('price')->money('IDR'),
             ])

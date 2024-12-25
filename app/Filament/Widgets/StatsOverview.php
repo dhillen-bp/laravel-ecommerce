@@ -20,7 +20,7 @@ class StatsOverview extends BaseWidget
             ->where('status', 'paid')
             ->get()
             ->sum(function ($order) {
-                return $order->orderItems->sum(function ($item) {
+                return $order->order_items->sum(function ($item) {
                     return $item->quantity * $item->price;
                 });
             });

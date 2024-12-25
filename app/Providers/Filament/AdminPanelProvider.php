@@ -32,6 +32,9 @@ class AdminPanelProvider extends PanelProvider
                 'info' => Color::Cyan,
                 'accent' => Color::Sky,
                 'neutral' => Color::Slate,
+                'primary' => Color::Purple,
+                'warning' => Color::Amber,
+                'danger' => Color::Red,
             ])
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
@@ -53,6 +56,7 @@ class AdminPanelProvider extends PanelProvider
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
             ])
+            // ->authGuard('web')
             ->authMiddleware([
                 Authenticate::class,
                 'role:owner'

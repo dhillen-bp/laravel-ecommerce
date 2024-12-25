@@ -4,7 +4,6 @@
         <p class="mt-2 text-gray-500">Kenali lebih dekat tentang kami dan misi kami untuk melayani Anda.</p>
     </section>
 
-
     <section class="mb-10">
         <div class="grid gap-8 md:grid-cols-2">
             <div>

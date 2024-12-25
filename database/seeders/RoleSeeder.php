@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Role;
 
 class RoleSeeder extends Seeder
@@ -26,7 +27,8 @@ class RoleSeeder extends Seeder
             [
                 'name' => "Admin",
                 'email' => 'admin@olsop.com',
-                'password' => bcrypt('123'),
+                'password' => Hash::make('123'),
+                'email_verified_at' => now(),
             ],
         );
         $owner->assignRole($ownerRole);
@@ -35,7 +37,7 @@ class RoleSeeder extends Seeder
             [
                 'name' => "Pembeli",
                 'email' => 'pembeli@email.com',
-                'password' => bcrypt('123'),
+                'password' => Hash::make('123'),
                 'province_id' => 5,
                 'city_id' => 39,
                 'address' => "Kota Gede, Yogyakarta",

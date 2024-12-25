@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('shippings', function (Blueprint $table) {
             $table->id();
-            $table->foreignUuid('order_id')->references('id')->on('orders')->onUpdate('cascade');
-            $table->foreignId('province_id')->constrained('provinces')->onUpdate('cascade');
-            $table->foreignId('city_id')->constrained('cities')->onUpdate('cascade');
+            $table->foreignUuid('order_id')->references('id')->on('orders')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreignId('province_id')->constrained('provinces')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreignId('city_id')->constrained('cities')->onUpdate('cascade')->onDelete('cascade');
             $table->string('address')->nullable();
             $table->unsignedBigInteger('cost');
             // $table->decimal('cost', 10, 2)->nullable();

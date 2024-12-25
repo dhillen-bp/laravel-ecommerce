@@ -7,6 +7,7 @@ use App\Filament\Resources\ProductResource\Pages;
 use App\Filament\Resources\ProductResource\RelationManagers;
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\ProductVariant as ModelsProductVariant;
 use Filament\Forms;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\RichEditor;
@@ -20,6 +21,10 @@ use Filament\Tables\Actions\Action;
 use Filament\Tables\Columns\BadgeColumn;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\Filter;
+use Filament\Tables\Filters\QueryBuilder\Constraints\SelectConstraint;
+use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -28,6 +33,7 @@ class ProductResource extends Resource
 {
     protected static ?string $model = Product::class;
 
+    protected static ?string $navigationGroup = 'Category & Product';
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
     protected static ?int $navigationSort = 1;
 
@@ -86,8 +92,18 @@ class ProductResource extends Resource
                     ->sortable(),
                 TextColumn::make('variants')
                     ->label('Price Variant Pertama')
-                    ->getStateUsing(fn ($record) => $record->variants->first()->pivot->price ?? 'N/A')
-                    ->money('IDR'),
+                    ->getStateUsing(fn ($record) => $record->variants->first()?->pivot->price ?? 'N/A')
+                    ->money('IDR')
+                    ->sortable(query: function (Builder $query, string $direction): Builder {
+                        return $query->orderBy(
+                            fn ($subquery) => $subquery->select('price')
+                                ->from('product_variants')
+                                ->whereColumn('product_variants.product_id', 'products.id')
+                                ->orderBy('product_variants.id')
+                                ->limit(1),
+                            $direction
+                        );
+                    }),
                 TextColumn::make('is_active')
                     ->badge()
                     ->formatStateUsing(fn ($state) => $state ? 'Active' : 'Inactive')
@@ -97,10 +113,13 @@ class ProductResource extends Resource
                     }),
             ])
             ->filters([
-                //
+                TernaryFilter::make('is_active')->label("Is Active")
+                    ->trueLabel('Active')
+                    ->falseLabel('Inactive'),
+
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()->color('warning'),
                 Tables\Actions\ViewAction::make(),
 
                 // Action::make('detail_variant')

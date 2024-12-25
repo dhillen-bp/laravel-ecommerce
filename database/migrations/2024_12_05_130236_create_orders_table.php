@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('user_id')->constrained()->onUpdate('cascade')->onDelete('cascade');
             $table->enum('status', ['pending', 'paid', 'processed', 'shipped', 'delivered', 'completed', 'cancelled'])->default('pending');
-            $table->unsignedBigInteger('total_product_price');
-            $table->unsignedBigInteger('total_price');
+            // $table->unsignedBigInteger('total_product_price');
+            // $table->unsignedBigInteger('total_price');
             // $table->string('shipping_address');
             // $table->string('shipping_method')->nullable();
             // $table->unsignedBigInteger('shipping_cost');

@@ -21,7 +21,7 @@ class Payment extends Component
 
     public function mount($order_id)
     {
-        $this->order = Order::with('orderItems.productVariant.product', 'orderItems.productVariant.variant', 'shipping')->findOrFail($order_id);
+        $this->order = Order::with('order_items.product_variant.product', 'order_items.product_variant.variant', 'shipping')->findOrFail($order_id);
         $this->user = Auth::user();
 
         if ($this->order->status === 'pending' && now()->greaterThan($this->order->expired_at)) {

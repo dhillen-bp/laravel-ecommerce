@@ -21,14 +21,14 @@
                     </p>
                 </div>
 
-                @foreach ($order->orderItems as $orderItem)
+                @foreach ($order->order_items as $orderItem)
                     <div class="mt-4 space-y-4">
                         <div class="flex items-center justify-between">
                             <div class="flex items-center">
-                                <img src="{{ $orderItem->productVariant->product->image ? Storage::url($orderItem->productVariant->product->image) : asset('images/laravel.svg') }}"
+                                <img src="{{ $orderItem->product_variant->product->image ? Storage::url($orderItem->product_variant->product->image) : asset('images/laravel.svg') }}"
                                     alt="Product Image" class="mr-4 h-12 w-12 object-cover">
-                                <span class="font-medium text-gray-700">{{ $orderItem->productVariant->product->name }}
-                                    - {{ $orderItem->productVariant->variant->name }}</span>
+                                <span class="font-medium text-gray-700">{{ $orderItem->product_variant->product->name }}
+                                    - {{ $orderItem->product_variant->variant->name }}</span>
                             </div>
                             <span class="text-sm text-gray-600">Rp
                                 {{ number_format($orderItem->price * $orderItem->quantity, 0, ',', '.') }}</span>
@@ -40,7 +40,7 @@
                     <a href="{{ route('front.order_detail', $order->id) }}" wire:navigate
                         class="btn btn-accent btn-text">View</a>
                     <span class="text-lg font-semibold">Total: Rp
-                        {{ number_format($order->total_price, 0, ',', '.') }}</span>
+                        {{ number_format($order->total_order_price, 0, ',', '.') }}</span>
                 </div>
             </div>
         @endforeach

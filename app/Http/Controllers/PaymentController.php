@@ -19,7 +19,7 @@ class PaymentController extends Controller
     public function createPayment(Request $request)
     {
         try {
-            Log::info('request: ', $request->all());
+            // Log::info('request: ', $request->all());
             // Konfigurasi Midtrans
             Config::$serverKey = config('midtrans.server_key');
             Config::$isProduction = config('midtrans.is_production');
@@ -27,45 +27,53 @@ class PaymentController extends Controller
             Config::$is3ds = config('midtrans.is_3ds');
 
             // Ambil data order berdasarkan ID
-            $order = Order::with('orderItems.productVariant.product', 'orderItems.productVariant.variant')->findOrFail($request->order_id);
+            $order = Order::with('order_items.product_variant.product', 'order_items.product_variant.variant')->findOrFail($request->order_id);
             $grossAmount = $order->price + $order->shipping_cost;
+
+            // Log::info('All Items Prices = ', $order->order_items->map(function ($item) {
+            //     return $item->product_variant->price;
+            // })->toArray());
 
             $params = [
                 'transaction_details' => [
                     'order_id' => $order->id,
-                    'gross_amount' => $grossAmount,
+                    'gross_amount' => $order->total_order_price,
                 ],
                 'customer_details' => [
                     'first_name' => $order->user->name,
                     'email' => $order->user->email,
-                    'phone' => $order->phone_number,
-                    'address' => $order->shipping_address,
+                    'phone' => $order->user->phone_number,
+                    'address' => $order->user->address,
                 ],
                 'shipping_details' => [
-                    'first_name' => $order->shipping_method,
-                    'address' => $order->shipping_address,
+                    'first_name' => $order->user->courier_name,
+                    'address' => $order->user->address,
                     "country_code" => "IDN"
                 ],
                 'item_details' => array_merge(
-                    $order->orderItems->map(function ($item) {
+                    $order->order_items->map(function ($item) {
                         return [
-                            'id' => $item->product_id,
-                            'price' => $item->productVariant->price,
+                            'id' => $item->product_variant->product->id,
+                            'price' => $item->product_variant->price,
                             'quantity' => $item->quantity,
-                            'name' => $item->productVariant->product->name,
+                            'brand' => $item->product_variant->product->name,
+                            'name' => $item->product_variant->variant->name,
+                            'merchant_name' => "Laravel Olsop",
+                            'category' => $item->product_variant->product->category->name,
                         ];
                     })->toArray(),
                     [
                         [
                             'id' => 'shipping_cost',
-                            'price' => $order->shipping_cost,
+                            'price' => $order->shipping->cost,
                             'quantity' => 1,
                             'name' => 'Shipping Cost',
                         ],
                     ]
                 ),
             ];
-            // \Log::info('Transaction Details: ', $params);
+            Log::info('Transaction Details: ', $params);
+
             // Buat token pembayaran
             $snapToken = Snap::getSnapToken($params);
 
@@ -109,7 +117,7 @@ class PaymentController extends Controller
                     $order->status = 'paid';
                     $order->save();
 
-                    foreach ($order->orderItems as $item) {
+                    foreach ($order->order_items as $item) {
                         // $product = Product::find($item->product_id);
                         // $product = Product::where('id', $item->product_id)
                         //     ->lockForUpdate()
@@ -117,20 +125,20 @@ class PaymentController extends Controller
                         // if ($product) {
                         //     $product->stock -= $item->quantity;
                         //     $product->save();
-                        $productVariant = ProductVariant::where('id', $item->product_variant_id)
+                        $product_variant = ProductVariant::where('id', $item->product_variant_id)
                             ->lockForUpdate()->first();
 
-                        if ($productVariant) {
+                        if ($product_variant) {
                             // Kurangi stok di ProductVariant
-                            $productVariant->stock -= $item->quantity;
-                            if ($productVariant->stock < 0) {
+                            $product_variant->stock -= $item->quantity;
+                            if ($product_variant->stock < 0) {
                                 DB::rollBack();
                                 Log::error("Stok produk tidak cukup untuk order {$orderId}.");
                                 Toaster::error("Stok produk tidak mencukupi");
                                 return response()->json(['message' => 'Stok tidak cukup'], 400);
                                 // throw new \Exception("Stok produk '{$product->name}' tidak cukup untuk memenuhi pesanan.");
                             }
-                            $productVariant->save();
+                            $product_variant->save();
                         }
                     }
 

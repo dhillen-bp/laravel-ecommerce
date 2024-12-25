@@ -7,16 +7,21 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Masmerise\Toaster\Toaster;
 
+Route::get('/login', App\Livewire\Auth\Login::class)->name('front.login');
+Route::get('/register', App\Livewire\Auth\Register::class)->name('front.register');
+Route::post('/logout', App\Livewire\Auth\LogoutButton::class)->middleware('auth')->name('front.logout');
+
 Route::middleware(['guest'])->group(function () {
-    Route::get('/', App\Livewire\Front\Home::class)->name('front.index');
-    Route::get('/about-us', App\Livewire\Front\AboutUs::class)->name('front.about');
-    Route::get('/products', App\Livewire\Front\Product::class)->name('front.products');
-    Route::get('/products/{product:slug}', App\Livewire\Front\ProductDetail::class)->name('front.products.show');
-    Route::get('/products/category/{category:slug}', App\Livewire\Front\ProductCategory::class)->name('front.products.category');
 
     Route::get('/forgot-password', App\Livewire\Auth\ForgotPassword::class)->name('password.request');
     Route::get('/reset-password/{token}', App\Livewire\Auth\ResetPassword::class)->name('password.reset');
 });
+
+Route::get('/', App\Livewire\Front\Home::class)->name('front.index');
+Route::get('/about-us', App\Livewire\Front\AboutUs::class)->name('front.about');
+Route::get('/products', App\Livewire\Front\Product::class)->name('front.products');
+Route::get('/products/{product:slug}', App\Livewire\Front\ProductDetail::class)->name('front.products.show');
+Route::get('/products/category/{category:slug}', App\Livewire\Front\ProductCategory::class)->name('front.products.category');
 
 Route::middleware(['auth', 'role:customer'])->group(function () {
     Route::get('/email/verify', App\Livewire\Auth\VerifyEmail::class)->name('verification.notice');
@@ -44,10 +49,6 @@ Route::middleware(['auth', 'role:customer'])->group(function () {
     });
 });
 Route::post('/payment/callback', [PaymentController::class, 'paymentCallback']);
-
-Route::get('/login', App\Livewire\Auth\Login::class)->name('front.login');
-Route::get('/register', App\Livewire\Auth\Register::class)->name('front.register');
-Route::post('/logout', App\Livewire\Auth\LogoutButton::class)->middleware('auth')->name('front.logout');
 
 Route::middleware(['auth', 'role:owner'])->group(function () {
     // Route::get('products/{product}/variants', [ProductVariantController::class, 'index'])->name('products.variants');

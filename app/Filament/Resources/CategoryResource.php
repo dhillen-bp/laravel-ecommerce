@@ -21,6 +21,7 @@ class CategoryResource extends Resource
 {
     protected static ?string $model = Category::class;
 
+    protected static ?string $navigationGroup = 'Category & Product';
     protected static ?string $navigationIcon = 'heroicon-o-ellipsis-horizontal';
     protected static ?int $navigationSort = 0;
 
@@ -44,7 +45,7 @@ class CategoryResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()->color('warning'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

@@ -27,11 +27,11 @@ class Cart extends Component
 
         if ($cart) {
             $this->cartItems = CartItem::where('cart_id', $cart->id)
-                ->with('productVariant.product', 'productVariant.variant')
+                ->with('product_variant.product', 'product_variant.variant')
                 ->get();
 
             $this->cartTotalPrice = $this->cartItems->sum(function ($item) {
-                return $item->productVariant->price * $item->quantity;
+                return $item->product_variant->price * $item->quantity;
             });
         }
     }
