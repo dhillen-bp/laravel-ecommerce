@@ -19,7 +19,8 @@
                 .then(data => {
                     snap.pay(data.snap_token, {
                         onSuccess: function(result) {
-                            window.location.href = '/my-order';
+                            // window.location.href = '/my-order';
+                            Livewire.navigate('/my_order')
                         },
                         onPending: function(result) {
                             alert('Menunggu pembayaran!');

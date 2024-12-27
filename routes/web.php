@@ -7,11 +7,11 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Masmerise\Toaster\Toaster;
 
-Route::get('/login', App\Livewire\Auth\Login::class)->name('front.login');
-Route::get('/register', App\Livewire\Auth\Register::class)->name('front.register');
 Route::post('/logout', App\Livewire\Auth\LogoutButton::class)->middleware('auth')->name('front.logout');
 
 Route::middleware(['guest'])->group(function () {
+    Route::get('/login', App\Livewire\Auth\Login::class)->name('front.login');
+    Route::get('/register', App\Livewire\Auth\Register::class)->name('front.register');
 
     Route::get('/forgot-password', App\Livewire\Auth\ForgotPassword::class)->name('password.request');
     Route::get('/reset-password/{token}', App\Livewire\Auth\ResetPassword::class)->name('password.reset');

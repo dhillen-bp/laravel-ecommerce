@@ -15,9 +15,9 @@
 - Riwayat Pesanan
 ---
 **Fitur Owner**
-- Manajemen data Kategori
-- Manajemen data Produk
-- Manajemen data Pesananan
+- Manajemen data Kategori & Produk
+- Manajemen data Pesananan & Pembayaran
+- Manajemen data Pengguna & Keranjang Belanja
 
 # TECH STACK
 - Laravel 11
@@ -80,7 +80,7 @@ npm run build
 php artisan serve
 ```
 
-## Menjalankan Midtrans
+## Menjalankan Midtrans Payment Gateway
 ### 1. Pada .env tambahkan clientkey & serverkey midtrans
 ```
 MIDTRANS_SERVER_KEY=your-server-key-here
@@ -100,5 +100,17 @@ Setelah mendapatkan url dari ngrok, perlu set url untuk callback pada Midtrans y
 ```
 APP_URL=https://b952-36-65-127-104.ngrok-free.app
 ASSET_URL=https://b952-36-65-127-104.ngrok-free.app
+```
+ASEET_URL ini digunakan menghindari tampilan yang rusak karena tidak dimuat dengan benar.
+
+## Menjalankan Send Email dengan Mailtrap
+### 1. Daftar pada mailtrap 
+### 2. Pada .env sesuaikan dengan Mailtrap
+```
+MAIL_MAILER=smtp
+MAIL_HOST=sandbox.smtp.mailtrap.io
+MAIL_PORT=2525
+MAIL_USERNAME={ganti sesuai username}
+MAIL_PASSWORD={ganti sesuai password}
 ```
 ASEET_URL ini digunakan menghindari tampilan yang rusak karena tidak dimuat dengan benar.

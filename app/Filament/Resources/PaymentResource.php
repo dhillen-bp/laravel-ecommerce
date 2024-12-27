@@ -59,7 +59,7 @@ class PaymentResource extends Resource
                 TextColumn::make('gross_amount')->money('IDR'),
                 TextColumn::make('status')
                     ->badge()
-                    ->color(fn (string $state): string => match ($state) {
+                    ->color(fn(string $state): string => match ($state) {
                         'success' => 'success',
                         'failed' => 'danger',
                         'pending' => 'warning',
@@ -76,6 +76,7 @@ class PaymentResource extends Resource
             ->actions([
                 // Tables\Actions\EditAction::make(),
                 Tables\Actions\ViewAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

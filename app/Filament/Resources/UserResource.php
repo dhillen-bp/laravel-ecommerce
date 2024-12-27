@@ -42,7 +42,7 @@ class UserResource extends Resource
                     ->label('Province')
                     ->options(Province::all()->pluck('name', 'id'))
                     ->reactive()
-                    ->afterStateUpdated(fn (callable $set) => $set('city_id', null)),
+                    ->afterStateUpdated(fn(callable $set) => $set('city_id', null)),
                 Select::make('city_id')
                     ->label('City')
                     ->options(function (callable $get) {
@@ -66,9 +66,13 @@ class UserResource extends Resource
                 TextColumn::make('email_verified')
                     ->label('Email Status')
                     ->badge()
-                    ->formatStateUsing(fn ($state) => $state ? 'Verified' : 'Unverified')
-                    ->color(fn ($state): string => $state ? 'success' : 'danger')
-                    ->getStateUsing(fn ($record) => $record->email_verified_at !== null),
+                    ->formatStateUsing(fn($state) => $state ? 'Verified' : 'Unverified')
+                    ->color(fn($state): string => $state ? 'success' : 'danger')
+                    ->getStateUsing(fn($record) => $record->email_verified_at !== null),
+                TextColumn::make('roles')
+                    ->label('Roles')
+                    ->formatStateUsing(fn($record) => $record->getRoleNames()->join(', '))
+                    ->sortable(),
 
             ])
             ->filters([
