@@ -54,7 +54,7 @@ class CheckoutNow extends Component
     public $selectedCourierOption = 0;
 
     public $voucher = [
-        'code' => '',
+        'code' =>  null,
         'percentage' => 0,
         'amount' => 0,
         'error' => null,

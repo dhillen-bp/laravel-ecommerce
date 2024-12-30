@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('bank')->nullable()->after('transaction_time');
             $table->unsignedBigInteger('gross_amount')->nullable()->after('bank');
             $table->string('midtrans_status')->nullable()->after('gross_amount');
+            $table->string('snap_token')->nullable()->after('midtrans_status');
 
             $table->dropColumn(['payment_proof']);
         });
@@ -30,7 +31,7 @@ return new class extends Migration
         Schema::table('payments', function (Blueprint $table) {
             $table->string('payment_proof');
 
-            $table->dropColumn(['payment_type', 'transaction_time', 'bank', 'gross_amount', 'midtrans_status']);
+            $table->dropColumn(['payment_type', 'transaction_time', 'bank', 'gross_amount', 'midtrans_status', 'snap_token']);
         });
     }
 };

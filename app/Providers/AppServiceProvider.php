@@ -4,11 +4,15 @@ namespace App\Providers;
 
 use App\Models\CartItem;
 use App\Models\Category;
+use App\Models\Order;
 use App\Models\Product;
+use App\Models\Shipping;
 use App\Models\User;
 use App\Observers\CartItemObserver;
 use App\Observers\CategoryObserver;
+use App\Observers\OrderObserver;
 use App\Observers\ProductObserver;
+use App\Observers\ShippingObserver;
 use App\Observers\UserObserver;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
@@ -39,5 +43,7 @@ class AppServiceProvider extends ServiceProvider
         CartItem::observe(CartItemObserver::class);
         User::observe(UserObserver::class);
         Category::observe(CategoryObserver::class);
+        Order::observe(OrderObserver::class);
+        Shipping::observe(ShippingObserver::class);
     }
 }

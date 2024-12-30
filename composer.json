@@ -8,6 +8,7 @@
     "require": {
         "php": "^8.2",
         "filament/filament": "3.x",
+        "filament/notifications": "3.x",
         "flowframe/laravel-trend": "^0.3.0",
         "kavist/rajaongkir": "1.1",
         "laravel/framework": "^11.31",

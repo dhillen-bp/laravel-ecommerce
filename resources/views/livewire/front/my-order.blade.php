@@ -5,8 +5,8 @@
 
         @foreach ($orders as $order)
             <div class="rounded-lg border bg-white p-4 shadow-md">
-                <h2 class="text-xl font-semibold">Order Transaction:
-                    {{ $order->payment ? $order->payment->transaction_id : 'Belum melakukan pembayaran' }}</h2>
+                <h2 class="text-xl font-semibold">Order ID:
+                    {{ $order->id }}</h2>
                 <p class="text-sm text-gray-600">Tanggal: {{ $order->created_at }}</p>
                 <p class="text-sm text-gray-600">Kurir Pengiriman: {{ $order->shipping->courier_name }}</p>
                 <p class="text-sm text-gray-600">Layanan Kurir:

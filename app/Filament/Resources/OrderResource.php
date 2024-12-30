@@ -34,6 +34,8 @@ class OrderResource extends Resource
         return static::getModel()::where('status', 'paid')->count();
     }
 
+    protected static ?string $navigationBadgeTooltip = 'The number of paid orders';
+
     public static function form(Form $form): Form
     {
         return $form

@@ -10,9 +10,12 @@ use App\Models\Order;
 use App\Models\Payment;
 use App\Models\Product;
 use App\Models\ProductVariant;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Masmerise\Toaster\Toaster;
+use Filament\Notifications\Notification as FilamentNotification;
 
 class PaymentController extends Controller
 {
@@ -28,7 +31,6 @@ class PaymentController extends Controller
 
             // Ambil data order berdasarkan ID
             $order = Order::with('order_items.product_variant.product', 'order_items.product_variant.variant')->findOrFail($request->order_id);
-            $grossAmount = $order->price + $order->shipping_cost;
 
             // Log::info('All Items Prices = ', $order->order_items->map(function ($item) {
             //     return $item->product_variant->price;
@@ -72,13 +74,30 @@ class PaymentController extends Controller
                     ]
                 ),
             ];
-            Log::info('Transaction Details: ', $params);
+            // Log::info('Transaction Details: ', $params);
 
             // Buat token pembayaran
             $snapToken = Snap::getSnapToken($params);
 
             if (!$snapToken) {
                 throw new \Exception('Snap token generation failed.');
+            }
+
+            // Log::info("snap: " . $snapToken);
+
+            $existingPayment = Payment::where('snap_token', $snapToken)->first();
+            $existingPayment2 = Payment::where('order_id', $order->id)->first();
+            if ($existingPayment || $existingPayment2) {
+                Toaster::error('Payment sudah dilakukan sebelumnya.');
+                return redirect()->route('front.order');
+            } else {
+                Payment::updateOrCreate(
+                    ['order_id' => $order->id],
+                    [
+                        'snap_token' => $snapToken,
+                        'status' => 'pending',
+                    ]
+                );
             }
 
             return response()->json(['snap_token' => $snapToken]);
@@ -142,8 +161,7 @@ class PaymentController extends Controller
                         }
                     }
 
-                    Payment::create([
-                        'order_id' => $orderId,
+                    Payment::updateOrCreate(['order_id' => $orderId,], [
                         'transaction_id' => $transactionId,
                         'status' => 'success',
                         'payment_type' => $type,
@@ -153,6 +171,35 @@ class PaymentController extends Controller
                         'midtrans_status' => $transaction,
                         'json_response' => json_encode($notif),
                     ]);
+
+                    $recipient = $order->user;
+                    // $notify = $recipient->notify(
+                    //     FilamentNotification::make()
+                    //         ->title('Pesanan Berhasil')
+                    //         ->body("Pesanan dengan Order ID = {$order->id} oleh Pengguna dengan nama {$recipient->name} dan email {$recipient->email} berhasil dibuat. Status pesanan saat ini adalah {$order->status}")
+                    //         ->toDatabase()
+                    // );
+                    $owners = User::role('owner')->get();
+                    foreach ($owners as $owner) {
+                        $owner->notify(
+                            FilamentNotification::make()
+                                ->title('Pesanan Berhasil Dibuat')
+                                ->body("
+                                <div class=''>
+                                    <p class='font-bold text-green-500'>Pesanan Berhasil</p>
+                                    <p>Order ID: <span class='text-purple-500 font-semibold'>{$order->id}</span></p>
+                                    <p>Nama: <span class='text-gray-700'>{$recipient->name}</span></p>
+                                    <p>Email: <span class='text-gray-700'>{$recipient->email}</span></p>
+                                    <p>Order Status: <span class='bg-purple-50 text-purple-500 text-xs font-medium mr-2 px-1.5 py-1 rounded-full'>{$order->status}</span></p>
+                                    <a href='/admin/orders/$order->id' class='bg-purple-500 text-white text-xs font-medium mt-2 px-2 py-1.5 rounded-full'>Lihat Detail</a>
+                                    </div>
+                                ")
+                                ->toDatabase()
+                        );
+                    }
+
+                    Log::info('recipient: ' . $recipient);
+                    // Log::info('notify: ' . $notify);
 
                     Toaster::success('Pembayaran berhasil dilakukan!');
                 }

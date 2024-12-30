@@ -24,7 +24,6 @@
         </div>
     </section>
 
-
     <section class="mb-10">
         <h2 class="mb-6 text-center text-2xl font-semibold">Nilai-Nilai Utama Kami</h2>
         <div class="grid gap-6 sm:grid-cols-2 md:grid-cols-3">

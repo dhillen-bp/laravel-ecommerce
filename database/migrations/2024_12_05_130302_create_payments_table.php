@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
             $table->foreignUuid('order_id')->references('id')->on('orders')->onUpdate('cascade')->onDelete('cascade');
-            $table->string('transaction_id')->unique();
+            $table->string('transaction_id')->unique()->nullable();
             $table->string('payment_proof');
             $table->enum('status', ['pending', 'success', 'failed'])->default('pending');
             $table->timestamps();

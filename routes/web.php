@@ -36,6 +36,7 @@ Route::middleware(['auth', 'role:customer'])->group(function () {
     Route::get('/my-profile', App\Livewire\Front\MyProfile::class)->name('front.my_profile');
 
     Route::middleware(['verified'])->group(function () {
+        Route::get('/notifications', App\Livewire\Front\Notification::class)->name('front.notification');
         Route::get('/carts', App\Livewire\Front\Cart::class)->name('front.cart');
         Route::get('/my-order', App\Livewire\Front\MyOrder::class)->name('front.order');
         Route::get('/my-order/{order_id}', App\Livewire\Front\OrderDetail::class)->name('front.order_detail');

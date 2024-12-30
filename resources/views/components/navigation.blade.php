@@ -13,7 +13,7 @@
                     @if (auth()->user()->hasRole('customer'))
                         <div class="navbar-end flex justify-end gap-x-2">
                             @livewire('front.cart.nav-cart')
-
+                            {{-- @livewire('components.nav-notification') --}}
                             @livewire('components.nav-profile')
                         </div>
                     @else
@@ -30,11 +30,11 @@
                 @endguest
 
                 <!-- Hamburger Icon for Mobile -->
-                <button type="button" class="collapse-toggle btn btn-square btn-secondary btn-outline btn-sm"
+                <button type="button" class="btn btn-square btn-secondary btn-outline collapse-toggle btn-sm"
                     data-collapse="#dropdown-navbar-collapse" aria-controls="dropdown-navbar-collapse"
                     aria-label="Toggle navigation">
-                    <span class="size-4 icon-[tabler--menu-2] collapse-open:hidden"></span>
-                    <span class="size-4 icon-[tabler--x] hidden collapse-open:block"></span>
+                    <span class="icon-[tabler--menu-2] size-4 collapse-open:hidden"></span>
+                    <span class="icon-[tabler--x] hidden size-4 collapse-open:block"></span>
                 </button>
             </div>
 
@@ -70,13 +70,11 @@
 
     <!-- Desktop Profile -->
     <div class="hidden md:block">
-        <div class="flex items-center justify-end gap-6">
+        <div class="flex items-center justify-end gap-3">
             @auth()
                 @if (auth()->user()->hasRole('customer'))
-                    <!-- Cart -->
                     @livewire('front.cart.nav-cart')
-
-                    <!-- Profile -->
+                    @livewire('components.nav-notification')
                     @livewire('components.nav-profile')
                 @else
                     <a href="{{ route('front.login') }}" class="btn btn-success btn-outline" wire:navigate>

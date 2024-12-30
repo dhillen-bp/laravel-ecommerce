@@ -161,11 +161,10 @@
             </div>
         </div>
     </div>
-
     <!-- Payment Button -->
     <div class="mt-6 text-center">
-        <button wire:click="submitOrder" @if (empty($courier_code) && empty($courierOptions)) disabled @endif
-            class="@if (empty($courier_code) && empty($courierOptions)) disabled @endif btn btn-primary w-full rounded-full">
+        <button wire:click="submitOrder" @if (empty($courier_code) && count($courierOptions) == 0) disabled @endif
+            class="@if (empty($courier_code) && count($courierOptions) == 0) disabled @endif btn btn-primary w-full rounded-full">
             Lakukan Checkout
         </button>
     </div>

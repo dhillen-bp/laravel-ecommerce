@@ -15,12 +15,13 @@
                         order_id: "{{ $order->id }}"
                     })
                 })
-                .then(response => response.json())
+                .then(
+                    response => response.json())
                 .then(data => {
                     snap.pay(data.snap_token, {
                         onSuccess: function(result) {
                             // window.location.href = '/my-order';
-                            Livewire.navigate('/my_order')
+                            Livewire.navigate('/my-order')
                         },
                         onPending: function(result) {
                             alert('Menunggu pembayaran!');

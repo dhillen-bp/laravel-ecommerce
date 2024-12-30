@@ -12,6 +12,7 @@ use App\Models\Shipping;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Kavist\RajaOngkir\Facades\RajaOngkir;
 use Livewire\Attributes\Title;
 use Livewire\Attributes\Validate;
@@ -51,7 +52,7 @@ class Checkout extends Component
     public $selectedCourierOption = 0;
 
     public $voucher = [
-        'code' => '',
+        'code' => null,
         'percentage' => 0,
         'amount' => 0,
         'error' => null,
@@ -276,6 +277,7 @@ class Checkout extends Component
             return $this->redirect(route('front.payment', ['order_id' => $order->id]), navigate: true);
         } catch (\Exception $e) {
             DB::rollBack();
+            Log::error("error: " . $e);
             Toaster::error('Terjadi kesalahan saat memproses pesanan. Silakan coba lagi.');
             return;
         }
