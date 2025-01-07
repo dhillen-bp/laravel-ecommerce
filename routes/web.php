@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ChatController;
 use App\Http\Controllers\PaymentController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
@@ -48,9 +49,14 @@ Route::middleware(['auth', 'role:customer'])->group(function () {
         Route::post('/payment-failed/{order}', [PaymentController::class, 'paymentFailed']);
         Route::get('/payment-failed', [PaymentController::class, 'paymentFailedMessage']);
     });
+
+    Route::get('/chatify/{userId}', [ChatController::class, 'index'])->name('chat.index');
+    Route::get('/test', function () {
+        return dd(request()->query('product_id'));
+    });
 });
 Route::post('/payment/callback', [PaymentController::class, 'paymentCallback']);
 
 Route::middleware(['auth', 'role:owner'])->group(function () {
-    // Route::get('products/{product}/variants', [ProductVariantController::class, 'index'])->name('products.variants');
+    // Route::get('/chat/{user_id}', [ChatController::class, 'chatWithProduct'])->name('chatify.product');s
 });

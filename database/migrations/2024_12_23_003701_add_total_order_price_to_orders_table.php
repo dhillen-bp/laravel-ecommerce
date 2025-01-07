@@ -32,8 +32,8 @@ return new class extends Migration
             $table->dropColumn([
                 'discount_code',
                 'discount_amount',
-                'total_price_after_discount',
-                'shipping_cost',
+                'total_product_price',
+                // 'shipping_cost',
                 'total_order_price'
             ]);
         });

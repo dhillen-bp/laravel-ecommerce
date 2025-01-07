@@ -7,7 +7,8 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
 
-    <title>{{ $title . ' - Laravel Olsop' ?? 'Laravel Olsop' }}</title>
+    <title>{{ $title ?? 'App' }} - Laravel Olsop</title>
+
     @livewireStyles
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -25,7 +26,12 @@
 
     <!-- Page Content -->
     <main>
-        {{ $slot }}
+        {{-- {{ $slot }} --}}
+        @isset($slot)
+            {{ $slot }}  <!-- Menampilkan konten jika $slot ada -->
+        @else
+            @yield('content')  <!-- Menampilkan konten default jika $slot tidak ada -->
+        @endisset
     </main>
 
     <x-footer />

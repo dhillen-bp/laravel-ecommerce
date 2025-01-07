@@ -16,6 +16,7 @@
         "livewire/livewire": "^3.5",
         "masmerise/livewire-toaster": "^2.6",
         "midtrans/midtrans-php": "^2.6",
+        "munafio/chatify": "^1.6",
         "spatie/laravel-permission": "^6.10"
     },
     "require-dev": {

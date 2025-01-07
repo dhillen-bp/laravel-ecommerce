@@ -6,6 +6,7 @@ use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Navigation\MenuItem;
+use Filament\Navigation\NavigationItem;
 use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
@@ -65,6 +66,13 @@ class AdminPanelProvider extends PanelProvider
             ->userMenuItems([
                 'logout' => MenuItem::make()->label('Log out')->color('danger'),
             ])
-            ->databaseNotifications();
+            ->databaseNotifications()
+            ->navigationItems([
+                NavigationItem::make('Chat')
+                    ->url('https://filament.pirsch.io', shouldOpenInNewTab: true)
+                    ->icon('heroicon-o-chat-bubble-bottom-center-text')
+                    // ->group('Reports')
+                    ->sort(3),
+            ]);
     }
 }

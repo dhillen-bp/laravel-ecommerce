@@ -51,8 +51,16 @@
                     @endforeach
                 </div>
             </div>
-            @livewire('front.cart.add-to-cart', ['productVariantId' => $selectedVariant->pivot->id, 'stock' => $selectedVariant->pivot->stock])
-            @livewire('components.button-buy-now', ['productVariantId' => $selectedVariant->pivot->id])
+            <div class="flex gap-x-4">
+                @livewire('front.cart.add-to-cart', ['productVariantId' => $selectedVariant->pivot->id, 'stock' => $selectedVariant->pivot->stock])
+                @livewire('components.button-buy-now', ['productVariantId' => $selectedVariant->pivot->id])
+            </div>
+
+            <div class="flex items-center justify-between mt-4">
+                <a href="{{ route('chat_product', [1, $product->id]) }}" class="btn btn-primary" wire:navigate>
+                    Mulai Chat dengan Admin
+                </a>
+            </div>
 
             <div class="flex items-center space-x-2">
                 <span class="text-yellow-500">⭐⭐⭐⭐⭐</span>
