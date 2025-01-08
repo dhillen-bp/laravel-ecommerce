@@ -68,11 +68,12 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->databaseNotifications()
             ->navigationItems([
-                NavigationItem::make('Chat')
-                    ->url('https://filament.pirsch.io', shouldOpenInNewTab: true)
+                NavigationItem::make('Chatify')
+                    ->url('/chat', shouldOpenInNewTab: true)
                     ->icon('heroicon-o-chat-bubble-bottom-center-text')
-                    // ->group('Reports')
-                    ->sort(3),
+                    ->isActiveWhen(fn(): bool => request()->routeIs('filament.admin.pages.chat'))
+                // ->group('Reports')
+                // ->sort(3),
             ]);
     }
 }

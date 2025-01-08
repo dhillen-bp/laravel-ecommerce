@@ -213,6 +213,7 @@ class CheckoutNow extends Component
                 'discount_amount' => $this->voucher['amount'],
                 'total_product_price' => $this->totalProductPrice,
                 'total_order_price' => $this->totalOrderPrice,
+                'status' => 'pending'
             ]);
 
             $product_variant = ProductVariant::lockForUpdate()->find($this->selectedVariant->id);

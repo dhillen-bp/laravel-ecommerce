@@ -117,8 +117,5 @@ Route::get('/group/{id}', 'MessagesController@index')->name('group');
 */
 // Route::get('/route', function(){ return 'Munaf'; }); // works as a route
 Route::get('/{id}', 'MessagesController@index')->name('user');
+Route::get('/{id}/{context_id}', 'MessagesController@chatContext')->name('chat.context');
 // Route::get('/route', function(){ return 'Munaf'; }); // works as a user id
-
-// Route untuk pengguna (menambahkan product_id atau order_id)
-Route::get('/{id}/{product_id}', 'MessagesController@productChat')->name('chat_product');
-Route::get('/{id}/{order_id}', 'MessagesController@orderChat')->name('chat_order');

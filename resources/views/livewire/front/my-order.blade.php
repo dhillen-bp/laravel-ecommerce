@@ -5,8 +5,10 @@
 
         @foreach ($orders as $order)
             <div class="rounded-lg border bg-white p-4 shadow-md">
-                <h2 class="text-xl font-semibold">Order ID:
-                    {{ $order->id }}</h2>
+                <div class="flex justify-between items-center">
+                    <h2 class="text-xl font-semibold">Order ID: {{ $order->id }}</h2>
+                    <livewire:components.button-start-chat :to-id=1 :context-id="$order->id" />
+                </div>
                 <p class="text-sm text-gray-600">Tanggal: {{ $order->created_at }}</p>
                 <p class="text-sm text-gray-600">Kurir Pengiriman: {{ $order->shipping->courier_name }}</p>
                 <p class="text-sm text-gray-600">Layanan Kurir:
@@ -38,7 +40,7 @@
 
                 <div class="mt-4 flex justify-between">
                     <a href="{{ route('front.order_detail', $order->id) }}" wire:navigate
-                        class="btn btn-accent btn-text">View</a>
+                        class="btn btn-accent btn-text">Lihat Detail</a>
                     <span class="text-lg font-semibold">Total: Rp
                         {{ number_format($order->total_order_price, 0, ',', '.') }}</span>
                 </div>

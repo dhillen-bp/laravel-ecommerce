@@ -56,11 +56,7 @@
                 @livewire('components.button-buy-now', ['productVariantId' => $selectedVariant->pivot->id])
             </div>
 
-            <div class="flex items-center justify-between mt-4">
-                <a href="{{ route('chat_product', [1, $product->id]) }}" class="btn btn-primary" wire:navigate>
-                    Mulai Chat dengan Admin
-                </a>
-            </div>
+            <livewire:components.button-start-chat :to-id=1 :context-id="$product->id" />
 
             <div class="flex items-center space-x-2">
                 <span class="text-yellow-500">⭐⭐⭐⭐⭐</span>

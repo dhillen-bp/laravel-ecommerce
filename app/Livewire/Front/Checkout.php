@@ -213,6 +213,7 @@ class Checkout extends Component
                 'discount_amount' => $this->voucher['amount'],
                 'total_product_price' => $this->totalProductPrice,
                 'total_order_price' => $this->totalOrderPrice,
+                'status' => 'pending'
             ]);
 
             foreach ($this->cartItems as $item) {

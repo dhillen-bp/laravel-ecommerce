@@ -9,6 +9,15 @@ class ChMessage extends Model
 {
     use UUID;
 
+    protected $fillable = [
+        'from_id',
+        'to_id',
+        'body',
+        'attachment',
+        'product_id',
+        'order_id',
+    ];
+
     public function product()
     {
         return $this->belongsTo(Product::class);

@@ -1,6 +1,9 @@
 <div class="container mx-auto min-h-screen p-6">
-    <h1 class="mb-6 mt-20 text-3xl font-semibold">Order Transaction:
-        {{ $order->payment ? $order->payment->transaction_id : 'Pembayaran Gagal' }}</h1>
+    <div class="flex justify-between items-center mb-6 mt-20">
+        <h1 class="text-3xl font-semibold">Order ID:
+                {{ $order->id }}</h1>
+        <livewire:components.button-start-chat :to-id=1 :context-id="$order->id" />
+    </div>
 
     <div class="rounded-lg border bg-white p-4 shadow-md">
         <h2 class="text-xl font-semibold">Products</h2>
