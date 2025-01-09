@@ -28,7 +28,7 @@ $timeAndSeen =
                             class="w-1h-16 h-16 rounded-lg bg-white object-cover p-2 md:h-20 md:w-20">
                         <div class="space-y-2">
                             <h4>{{ $product->name }}</h4>
-                            <p class="text-sm text-slate-600">{{ Str::limit($product->description, 50) . '...' }}</p>
+                            <p class="text-sm text-slate-600">{{ Str::limit($product->description, 50, '...') }}</p>
                             <a href="{{ route('front.products.show', $product->slug) }}" class="btn btn-primary btn-sm"
                                 wire:navigate>Lihat Produk</a>
                         </div>
@@ -42,9 +42,16 @@ $timeAndSeen =
                                 <span
                                     class="{{ orderStatusClass($order->status) }} mr-2 rounded-full px-2 py-1 font-medium">{{ orderStatus($order->status) }}</span>
                             </p>
-                            <p>Tracking Number:
-                                <span>{{ $order->tracking_number ?? '-' }}</span>
-                            </p>
+                            @if ($order->shipping)
+                                <div>
+                                    <p>Tracking Number:
+                                        <span>{{ $order->shipping->tracking_number ?? '-' }}</span>
+                                    </p>
+                                    <p>Estimate Day:
+                                        <span>{{ $order->shipping->estimate_day ?? '-' }}</span>
+                                    </p>
+                                </div>
+                            @endif
                             <a href="{{ route('front.order_detail', $order->id) }}" class="btn btn-primary btn-sm"
                                 wire:navigate>Lihat Pesanan</a>
                         </div>
@@ -52,6 +59,7 @@ $timeAndSeen =
                 @else
                     <div></div>
                 @endif
+                {{-- END CUSTOM CHAT --}}
 
                 {!! $message == null && $attachment != null && @$attachment->type != 'file'
                     ? $attachment->title

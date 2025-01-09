@@ -17,9 +17,7 @@
                             @livewire('components.nav-profile')
                         </div>
                     @else
-                        <a href="{{ route('front.login') }}" class="btn btn-success btn-outline" wire:navigate>
-                            Login
-                        </a>
+                        @livewire('components.nav-profile')
                     @endif
                 @endauth
 
@@ -37,8 +35,6 @@
                     <span class="icon-[tabler--x] hidden size-4 collapse-open:block"></span>
                 </button>
             </div>
-
-
 
         </div>
     </div>
@@ -73,13 +69,12 @@
         <div class="flex items-center justify-end gap-3">
             @auth()
                 @if (auth()->user()->hasRole('customer'))
+                    @livewire('components.nav-chat')
                     @livewire('front.cart.nav-cart')
                     @livewire('components.nav-notification')
                     @livewire('components.nav-profile')
                 @else
-                    <a href="{{ route('front.login') }}" class="btn btn-success btn-outline" wire:navigate>
-                        Login
-                    </a>
+                    @livewire('components.nav-profile')
                 @endif
             @endauth
 
@@ -88,7 +83,6 @@
                     Login
                 </a>
             @endguest
-
 
         </div>
     </div>

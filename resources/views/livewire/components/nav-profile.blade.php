@@ -7,7 +7,7 @@
             </div>
         </div>
     </button>
-    <ul class="min-w-60 dropdown-menu hidden dropdown-open:opacity-100" role="menu" aria-orientation="vertical"
+    <ul class="dropdown-menu hidden min-w-60 dropdown-open:opacity-100" role="menu" aria-orientation="vertical"
         aria-labelledby="dropdown-avatar">
         <li class="dropdown-header gap-2">
             <div class="avatar">
@@ -26,12 +26,14 @@
                 Profil Saya
             </a>
         </li>
-        <li>
-            <a class="dropdown-item" href="{{ route('front.order') }}" wire:navigate>
-                <span class="icon-[tabler--settings]"></span>
-                Pesanan Saya
-            </a>
-        </li>
+        @if (auth()->user()->hasRole('customer'))
+            <li>
+                <a class="dropdown-item" href="{{ route('front.order') }}" wire:navigate>
+                    <span class="icon-[tabler--settings]"></span>
+                    Pesanan Saya
+                </a>
+            </li>
+        @endif
         <li class="dropdown-footer gap-2">
             @livewire('auth.logout-button')
         </li>

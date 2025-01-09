@@ -62,7 +62,6 @@ class CustomChatify extends ChatifyMessenger
         if ($msg->product_id) {
             $product = Product::select('id', 'name', 'slug', 'image', 'description')->where("id", $product_id)->first();
         }
-
         $order = null;
         if ($order_id) {
             $order = Order::select('id', 'status', 'total_order_price')

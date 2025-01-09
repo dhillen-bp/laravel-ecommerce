@@ -34,7 +34,7 @@ class ProductResource extends Resource
     protected static ?string $model = Product::class;
 
     protected static ?string $navigationGroup = 'Category & Product';
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-shopping-bag';
     protected static ?int $navigationSort = 1;
 
     public static function form(Form $form): Form
@@ -88,15 +88,15 @@ class ProductResource extends Resource
                 TextColumn::make('description')->words(3)->html(),
                 TextColumn::make('variants')
                     ->label('Stock Variant Pertama')
-                    ->getStateUsing(fn ($record) => $record->variants->first()->pivot->stock ?? 'N/A')
+                    ->getStateUsing(fn($record) => $record->variants->first()->pivot->stock ?? 'N/A')
                     ->sortable(),
                 TextColumn::make('variants')
                     ->label('Price Variant Pertama')
-                    ->getStateUsing(fn ($record) => $record->variants->first()?->pivot->price ?? 'N/A')
+                    ->getStateUsing(fn($record) => $record->variants->first()?->pivot->price ?? 'N/A')
                     ->money('IDR')
                     ->sortable(query: function (Builder $query, string $direction): Builder {
                         return $query->orderBy(
-                            fn ($subquery) => $subquery->select('price')
+                            fn($subquery) => $subquery->select('price')
                                 ->from('product_variants')
                                 ->whereColumn('product_variants.product_id', 'products.id')
                                 ->orderBy('product_variants.id')
@@ -106,8 +106,8 @@ class ProductResource extends Resource
                     }),
                 TextColumn::make('is_active')
                     ->badge()
-                    ->formatStateUsing(fn ($state) => $state ? 'Active' : 'Inactive')
-                    ->color(fn (string $state): string => match ($state) {
+                    ->formatStateUsing(fn($state) => $state ? 'Active' : 'Inactive')
+                    ->color(fn(string $state): string => match ($state) {
                         '1' => 'success',
                         '0' => 'danger',
                     }),

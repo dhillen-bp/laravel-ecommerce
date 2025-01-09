@@ -47,6 +47,11 @@ class AddToCart extends Component
             //     ->error('The form contains several errors');
         }
 
+        if (!Auth::user()->hasRole('customer')) {
+            Toaster::error('Anda saat ini masuk sebagai Owner atau Admin. Silakan gunakan akun dengan peran Customer untuk melanjutkan proses.')->duration(5000);
+            return;
+        }
+
         if ($this->quantity > $this->stock) {
             Toaster::error('Jumlah pesanan melebihi stok tersedia!');
             return;

@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use App\Models\ChMessage as Message;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
@@ -71,7 +72,15 @@ class AdminPanelProvider extends PanelProvider
                 NavigationItem::make('Chatify')
                     ->url('/chat', shouldOpenInNewTab: true)
                     ->icon('heroicon-o-chat-bubble-bottom-center-text')
-                    ->isActiveWhen(fn(): bool => request()->routeIs('filament.admin.pages.chat'))
+                    ->badge(function () {
+                        $userId = auth()->id();
+                        $unreadMessagesCount = Message::where('to_id', $userId)
+                            ->where('seen', 0)
+                            ->count();
+                        return $unreadMessagesCount > 0 ? $unreadMessagesCount : 0;
+                    })
+                    ->badgeTooltip("Unseen Message"),
+                // ->isActiveWhen(fn(): bool => request()->routeIs('filament.admin.pages.chat'))
                 // ->group('Reports')
                 // ->sort(3),
             ]);

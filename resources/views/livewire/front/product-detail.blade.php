@@ -9,7 +9,7 @@
             <div class="swiper-container mt-6 w-full">
                 <div class="swiper-wrapper flex items-center justify-center gap-3">
                     <div class="swiper-button-next">
-                        <span class="size-7 md:size-5 icon-[tabler--caret-left]"></span>
+                        <span class="icon-[tabler--caret-left] size-7 md:size-5"></span>
                     </div>
                     @foreach ($images as $image)
                         <div class="swiper-slide">
@@ -19,7 +19,7 @@
                         </div>
                     @endforeach
                     <div class="swiper-button-prev">
-                        <span class="size-7 md:size-5 icon-[tabler--caret-right]"></span>
+                        <span class="icon-[tabler--caret-right] size-7 md:size-5"></span>
                     </div>
                 </div>
 
@@ -56,7 +56,9 @@
                 @livewire('components.button-buy-now', ['productVariantId' => $selectedVariant->pivot->id])
             </div>
 
-            <livewire:components.button-start-chat :to-id=1 :context-id="$product->id" />
+            @if (auth()->user()->hasRole('customer'))
+                <livewire:components.button-start-chat :to-id=1 :context-id="$product->id" />
+            @endif
 
             <div class="flex items-center space-x-2">
                 <span class="text-yellow-500">⭐⭐⭐⭐⭐</span>

@@ -34,6 +34,7 @@ class UserResource extends Resource
             ->schema([
                 TextInput::make('name')->required()->maxLength(255),
                 TextInput::make('email')->required()->maxLength(255)->unique(ignoreRecord: true),
+                TextInput::make('password')->password()->revealable(),
                 DateTimePicker::make('email_verified_at'),
                 TextInput::make('phone_number')
                     ->tel()

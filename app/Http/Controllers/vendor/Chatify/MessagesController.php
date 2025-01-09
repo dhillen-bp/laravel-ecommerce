@@ -68,14 +68,14 @@ class MessagesController extends Controller
         $context_type = null;
 
         if (is_numeric($context_id)) {
-            $context = Product::select('id', 'name', 'image', 'slug')->where('id', $context_id)->first();
+            $context = Product::select('id', 'name', 'image', 'slug', 'description')->where('id', $context_id)->first();
             $context_type = 'product';
         } else {
-            $context = Order::with(['order_items', 'shipping'])->where('id', $context_id)->first();
+            $context = Order::select('id', 'status', 'total_order_price')->with(['shipping:id,order_id,tracking_number,estimate_day'])->where('id', $context_id)->first();
             $context_type = 'order';
         }
 
-        // Log::info("context info: " . $context);
+        Log::info("context info: " . $context);
 
         $messenger_color = Auth::user()->messenger_color;
         return view('Chatify::pages.app', [

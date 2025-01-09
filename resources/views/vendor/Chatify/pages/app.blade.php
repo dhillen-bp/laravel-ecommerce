@@ -81,30 +81,43 @@
 
             {{-- Messaging area --}}
             <div class="m-body messages-container app-scroll">
+                <div class="messages">
+                    <p class="message-hint center-el"><span>Please select a chat to start messaging</span></p>
+                </div>
+
                 {{-- CUSTOM CHAT --}}
                 @isset($context_type)
                     @if ($context_type === 'product')
+                        <input type="hidden" value="{{ $context }}">
                         <div class="mx-6 mb-3 flex items-center justify-center space-x-6 rounded bg-[#fff] py-3 shadow-sm">
                             <img src="{{ $context->image != null ? formatImageUrl($context->image) : asset('images/laravel.svg') }}"
                                 class="h-16 w-16 rounded-lg object-cover md:h-20 md:w-20">
                             <div class="space-y-2">
                                 <h4>{{ $context->name }}</h4>
-                                <p class="text-sm text-slate-600">{{ Str::limit($context->description, 100) . '...' }}</p>
+                                <p class="text-sm text-slate-600">{{ Str::limit($context->description, 100, '...') }}</p>
                                 <a href="{{ route('front.products.show', $context->slug) }}" class="btn btn-primary btn-sm"
                                     wire:navigate>Lihat Produk</a>
                             </div>
                         </div>
                     @elseif ($context_type === 'order')
                         <div class="mx-6 mb-3 flex items-center justify-center space-x-6 rounded bg-[#fff] py-3 shadow-sm">
+                            <input type="hidden" value="{{ $context }}">
                             <div class="space-y-2">
                                 <h4 class="text-wrap">Order ID: {{ $context->id }}</h4>
                                 <p>Status:
                                     <span
                                         class="{{ orderStatusClass($context->status) }} mr-2 rounded-full px-2 py-1 font-medium">{{ orderStatus($context->status) }}</span>
                                 </p>
-                                <p>Tracking Number:
-                                    <span>{{ $context->tracking_number ?? '-' }}</span>
-                                </p>
+                                @if ($context->shipping)
+                                    <div>
+                                        <p>Tracking Number:
+                                            <span>{{ $context->shipping->tracking_number ?? '-' }}</span>
+                                        </p>
+                                        <p>Estimate Day:
+                                            <span>{{ $context->shipping->estimate_day ?? '-' }}</span>
+                                        </p>
+                                    </div>
+                                @endif
                                 <a href="{{ route('front.order_detail', $context->id) }}" class="btn btn-primary btn-sm"
                                     wire:navigate>Lihat Pesanan</a>
                             </div>
@@ -113,10 +126,6 @@
                         <div></div>
                     @endif
                 @endisset
-
-                <div class="messages">
-                    <p class="message-hint center-el"><span>Please select a chat to start messaging</span></p>
-                </div>
 
                 {{-- Typing indicator --}}
                 <div class="typing-indicator">

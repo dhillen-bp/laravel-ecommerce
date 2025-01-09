@@ -27,6 +27,11 @@ class ButtonBuyNow extends Component
             return $this->redirect(route('verification.notice'), navigate: true);
         }
 
+        if (!Auth::user()->hasRole('customer')) {
+            Toaster::error('Anda saat ini masuk sebagai Owner atau Admin. Silakan gunakan akun dengan peran Customer untuk melanjutkan proses.')->duration(5000);
+            return;
+        }
+
         session()->put('checkoutItems', [strval($this->productVariantId)]);
 
         return $this->redirectRoute('front.checkout_now', navigate: true);
