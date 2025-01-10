@@ -82,6 +82,12 @@ class UserResource extends Resource
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make()->color('warning'),
+                Tables\Actions\Action::make('assignRole')
+                    ->label('Assign Role')
+                    ->icon('heroicon-o-shield-check')
+                    ->color('primary')
+                    ->url(fn($record) => route('filament.admin.resources.users.assign_role', ['record' => $record->id]))
+                    ->openUrlInNewTab(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -104,6 +110,7 @@ class UserResource extends Resource
             'create' => Pages\CreateUser::route('/create'),
             'view' => Pages\ViewUser::route('/{record}'),
             'edit' => Pages\EditUser::route('/{record}/edit'),
+            'assign_role' => Pages\AssignRole::route('/{record}/assign-role'),
         ];
     }
 }

@@ -9,10 +9,12 @@ export default {
         "./resources/**/*.js",
         "./resources/**/*.vue",
         "./node_modules/flyonui/dist/js/*.js",
-        './vendor/masmerise/livewire-toaster/resources/views/*.blade.php',
-        './app/Filament/**/*.php',
-        './resources/views/filament/**/*.blade.php',
-        './vendor/filament/**/*.blade.php',
+        "./vendor/masmerise/livewire-toaster/resources/views/*.blade.php",
+
+        "./app/Filament/**/*.php",
+        "./resources/views/filament/**/*.blade.php",
+        "./vendor/filament/**/*.blade.php",
+        "./vendor/danharrin/filament-blog/resources/views/**/*.blade.php",
     ],
     theme: {
         extend: {
