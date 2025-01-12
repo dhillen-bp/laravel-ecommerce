@@ -56,16 +56,21 @@
                 @livewire('components.button-buy-now', ['productVariantId' => $selectedVariant->pivot->id])
             </div>
 
-            @if (auth()->user()->hasRole('customer'))
-                <livewire:components.button-start-chat :to-id=1 :context-id="$product->id" />
-            @endif
-
-            <div class="flex items-center space-x-2">
-                <span class="text-yellow-500">⭐⭐⭐⭐⭐</span>
-                <span class="text-gray-600">(100 Ulasan)</span>
-            </div>
+            @auth
+                @if (auth()->user()->hasRole('customer'))
+                    <livewire:components.button-start-chat :to-id=1 :context-id="$product->id" />
+                @endif
+            @endauth
         </div>
     </div>
+
+    <section class="mt-12">
+        <h2 class="text-2xl font-semibold text-gray-800">Ulasan Produk</h2>
+
+        @livewire('components.form-review', ['productId' => $product->id])
+        <hr class="my-5">
+        @livewire('components.list-review', ['productId' => $product->id])
+    </section>
 
     <section class="mt-12">
         <h2 class="text-2xl font-semibold text-gray-800">Produk Terkait</h2>

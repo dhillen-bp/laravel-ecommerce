@@ -39,4 +39,9 @@ class Product extends Model
             ->withPivot('id', 'price', 'stock')
             ->withTimestamps();
     }
+
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
+    }
 }

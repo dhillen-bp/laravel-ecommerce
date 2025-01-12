@@ -17,7 +17,7 @@ class ProductDetail extends Component
 
     public function mount(Product $product)
     {
-        $this->product = $product->load('variants');
+        $this->product = $product->load('variants', 'reviews');
 
         $this->selectedVariant = $this->product->variants->first();
 

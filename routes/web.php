@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\ReviewFileController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -51,9 +52,7 @@ Route::middleware(['auth', 'role:customer'])->group(function () {
     });
 
     Route::get('/chatify/{userId}', [ChatController::class, 'index'])->name('chat.index');
-    Route::get('/test', function () {
-        return dd(request()->query('product_id'));
-    });
+    Route::get('/review-upload/{reviewId}', [ReviewFileController::class, 'store'])->name('review_upload.store');
 });
 Route::post('/payment/callback', [PaymentController::class, 'paymentCallback']);
 
