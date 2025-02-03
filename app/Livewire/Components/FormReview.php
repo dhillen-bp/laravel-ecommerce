@@ -2,9 +2,12 @@
 
 namespace App\Livewire\Components;
 
+use App\Models\OrderItem;
+use App\Models\ProductVariant;
 use App\Models\Review;
 use App\Models\ReviewFile;
 use Illuminate\Http\File;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -21,23 +24,24 @@ class FormReview extends Component
     public $files = [];
 
     public $existingReview;
+    public $hasPurchased = false;
 
     public function mount($productId)
     {
         $this->productId = $productId;
 
-        // Cari review user untuk produk ini
+
         $this->existingReview = Review::where('product_id', $productId)
             ->where('user_id', auth()->id())
             ->first();
 
-        // Jika ada review, isi properti form dengan data existing
         if ($this->existingReview) {
             $this->rating = $this->existingReview->rating;
             $this->description = $this->existingReview->description;
         }
-    }
 
+        $this->checkIfUserPurchased();
+    }
 
     public function rules()
     {
@@ -146,9 +150,25 @@ class FormReview extends Component
         }
     }
 
+    private function checkIfUserPurchased()
+    {
+        $userId = Auth::id();
+        if (!$userId) {
+            return;
+        }
+
+        $variantIds = ProductVariant::where('product_id', $this->productId)->pluck('id');
+
+        $this->hasPurchased = OrderItem::whereHas('order', function ($query) use ($userId) {
+            $query->where('user_id', $userId)->where('status', 'completed');
+        })->whereIn('product_variant_id', $variantIds)->exists();
+    }
+
 
     public function render()
     {
-        return view('livewire.components.form-review');
+        return view('livewire.components.form-review', [
+            'hasPurchased' => $this->hasPurchased
+        ]);
     }
 }
